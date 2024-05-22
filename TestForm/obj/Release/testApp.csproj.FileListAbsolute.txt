@@ -1,0 +1,15 @@
+D:\Jonathan\desk\AsiaVista\.tools\use4test\test\testApp\testApp\bin\Release\Newtonsoft.Json.dll
+D:\Jonathan\desk\AsiaVista\.tools\use4test\test\testApp\testApp\bin\Release\Newtonsoft.Json.xml
+D:\Jonathan\desk\AsiaVista\.tools\use4test\test\testApp\testApp\obj\Release\testApp.Form1.resources
+D:\Jonathan\desk\AsiaVista\.tools\use4test\test\testApp\testApp\obj\Release\testApp.csproj.GenerateResource.cache
+D:\Jonathan\desk\AsiaVista\.tools\use4test\test\testApp\testApp\obj\Release\testApp.csproj.CoreCompileInputs.cache
+D:\Jonathan\desk\AsiaVista\.tools\use4test\test\testApp\testApp\obj\Release\testApp.csproj.CopyComplete
+D:\Jonathan\desk\AsiaVista\.tools\use4test\test\testApp\testApp\bin\Release\testApp.exe.manifest
+D:\Jonathan\desk\AsiaVista\.tools\use4test\test\testApp\testApp\bin\Release\testApp.application
+D:\Jonathan\desk\AsiaVista\.tools\use4test\test\testApp\testApp\bin\Release\testApp.exe
+D:\Jonathan\desk\AsiaVista\.tools\use4test\test\testApp\testApp\bin\Release\testApp.pdb
+D:\Jonathan\desk\AsiaVista\.tools\use4test\test\testApp\testApp\obj\Release\testApp.Properties.Resources.resources
+D:\Jonathan\desk\AsiaVista\.tools\use4test\test\testApp\testApp\obj\Release\testApp.exe.manifest
+D:\Jonathan\desk\AsiaVista\.tools\use4test\test\testApp\testApp\obj\Release\testApp.application
+D:\Jonathan\desk\AsiaVista\.tools\use4test\test\testApp\testApp\obj\Release\testApp.exe
+D:\Jonathan\desk\AsiaVista\.tools\use4test\test\testApp\testApp\obj\Release\testApp.pdb
