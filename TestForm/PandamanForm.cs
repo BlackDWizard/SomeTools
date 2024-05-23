@@ -916,6 +916,401 @@ namespace TestForm
 
                 tecInfoScript.Text = infoScript.ToString();
             }
+            else if (cbbVersion.SelectedIndex == 1)
+            {
+
+                #region V2
+                RadioButton checkedButtonThrowException = gbThrowException.Controls.OfType<RadioButton>().FirstOrDefault(r => r.Checked);
+                RadioButton checkedButtonIsSuccess = gbIsSuccess.Controls.OfType<RadioButton>().FirstOrDefault(r => r.Checked);
+                RadioButton checkedButtonWriteExplog = gbWriteExplog.Controls.OfType<RadioButton>().FirstOrDefault(r => r.Checked);
+
+                StringBuilder infoScript = new StringBuilder();
+
+                infoScript.AppendLine("using System;");
+                infoScript.AppendLine("using System.Collections.Generic;");
+                infoScript.AppendLine("using System.Data;");
+                infoScript.AppendLine("using System.Data.Common;");
+                infoScript.AppendLine("using System.Text;");
+                infoScript.AppendLine("using System.Xml;");
+                infoScript.AppendLine("using System.Configuration;");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("namespace " + tbNameSpace.Text);
+                infoScript.AppendLine("{");
+                infoScript.AppendLine("    public partial class " + tableName + "Info");
+                infoScript.AppendLine("    {");
+                infoScript.AppendLine("        ");
+                infoScript.AppendLine("        /// <summary>");
+                infoScript.AppendLine("        /// Constructors");
+                infoScript.AppendLine("        /// </summary>		");
+                infoScript.AppendLine("        public " + tableName + "Info()");
+                infoScript.AppendLine("        {");
+                infoScript.AppendLine("            this.Init();");
+                infoScript.AppendLine("        }");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("        #region Init");
+                infoScript.AppendLine("        private void Init()");
+                infoScript.AppendLine("        {");
+
+                foreach (DataRow dr in ColumnsTable.Rows)
+                {
+                    string[] wording = generateWording(dr).Split('@');
+                    infoScript.AppendLine("        	this._" + String.Format("{0,-60}", dr["ColumnName"].ToString() + wording[0].ToString() + ";") + "//" + dr["Description"].ToString().Replace("\r\n", "\t"));
+                }
+
+                infoScript.AppendLine("        }");
+                infoScript.AppendLine("        #endregion");
+                infoScript.AppendLine("        ");
+                infoScript.AppendLine("        ");
+                infoScript.AppendLine("        #region Private Properties");
+
+                foreach (DataRow dr in ColumnsTable.Rows)
+                {
+                    string[] wording = generateWording(dr).Split('@');
+                    infoScript.AppendLine("        	private " + wording[1].ToString() + " _" + dr["ColumnName"].ToString() + ";");
+                }
+
+                infoScript.AppendLine("        #endregion");
+                infoScript.AppendLine("        ");
+                infoScript.AppendLine("        ");
+                infoScript.AppendLine("        #region Public Properties");
+                infoScript.AppendLine("        ");
+
+                foreach (DataRow dr in ColumnsTable.Rows)
+                {
+                    string[] wording = generateWording(dr).Split('@');
+                    infoScript.AppendLine("        /// <summary>");
+                    infoScript.AppendLine("        /// " + dr["Description"].ToString().Replace("\r\n", "\t"));
+                    infoScript.AppendLine("        /// </summary>");
+                    infoScript.AppendLine("        public " + wording[1] + " " + dr["ColumnName"].ToString());
+                    infoScript.AppendLine("        {");
+                    infoScript.AppendLine("        	get { return _" + dr["ColumnName"].ToString() + "; }");
+                    infoScript.AppendLine("        	set { _" + dr["ColumnName"].ToString() + " = value; }");
+                    infoScript.AppendLine("        }");
+                }
+                infoScript.AppendLine("        #endregion");
+                infoScript.AppendLine("        ");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("        #region Methods");
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                infoScript.AppendLine("");
+                infoScript.AppendLine("        /// <summary>");
+                infoScript.AppendLine("        /// 依據PK載入一筆資料");
+                infoScript.AppendLine("        /// </summary>");
+                infoScript.AppendLine("        /// <returns>true代表成功載入，false代表找不到任何資料</returns>");
+                infoScript.Append("        public bool Load(");
+
+                foreach (DataRow dr in ColumnsTable.Rows)
+                {
+                    string[] wording = generateWording(dr).Split('@');
+                    if (dr["isPK"].ToString() == "Y")
+                    {
+                        if (ColumnsTable.Rows.IndexOf(dr) == pkColumns.Count - 1)
+                        {
+                            infoScript.Append(wording[1] + " i" + dr["ColumnName"].ToString());
+                        }
+                        else
+                        {
+                            infoScript.Append(wording[1] + " i" + dr["ColumnName"].ToString() + ", ");
+                        }
+                    }
+                }
+
+                infoScript.AppendLine(")");
+                infoScript.AppendLine("        {");
+                infoScript.AppendLine("            bool Result = false;");
+                infoScript.AppendLine("");
+                foreach (string pkColumn in pkColumns)
+                {
+                    infoScript.AppendLine("            this._" + pkColumn + " = i" + pkColumn + ";");
+                }
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            Database db = base.GetDatabase();");
+                infoScript.AppendLine("            StringBuilder sbCmd = new StringBuilder();");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            sbCmd.Append(\"   SELECT * FROM [" + tableName + "] WITH (Nolock) \");");
+                infoScript.AppendLine("            sbCmd.Append(\"   WHERE(1 = 1) \");");
+                foreach (string pkColumn in pkColumns)
+                {
+                    infoScript.AppendLine("            sbCmd.Append(\"       AND " + pkColumn + " = @" + pkColumn + "      \");");
+                }
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            DbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            #region Add In Parameter");
+                infoScript.AppendLine("");
+                foreach (DataRow dr in ColumnsTable.Rows)
+                {
+                    string[] wording = generateWording(dr).Split('@');
+                    if (dr["isPK"].ToString() == "Y")
+                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
+                }
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            #endregion");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            try");
+                infoScript.AppendLine("            {");
+                infoScript.AppendLine("                DataTable dtTemp = db.ExecuteDataSet(dbCommand).Tables[0];");
+                infoScript.AppendLine("                if (dtTemp.Rows.Count == 0)");
+                infoScript.AppendLine("                {");
+                infoScript.AppendLine("                    base.EditMode = EditType.Insert;");
+                infoScript.AppendLine("                    Result = false;");
+                infoScript.AppendLine("                }");
+                infoScript.AppendLine("                else");
+                infoScript.AppendLine("                {");
+                infoScript.AppendLine("                    base.EditMode = EditType.Update;");
+                infoScript.AppendLine("                    Result = true;");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("                    DataRow dr = dtTemp.Rows[0];");
+                foreach (DataRow dr in ColumnsTable.Rows)
+                {
+                    string[] wording = generateWording(dr).Split('@');
+                    infoScript.AppendLine("\t\t\t\t\t" + wording[3]);
+                }
+                infoScript.AppendLine("                }");
+                if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
+                    infoScript.AppendLine("                base.IsSuccess = true;");
+                else
+                    infoScript.AppendLine("                base.ErrFlag = true;");
+                infoScript.AppendLine("            }");
+                infoScript.AppendLine("            catch (Exception ex)");
+                infoScript.AppendLine("            {");
+                infoScript.AppendLine("            }");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            return Result;");
+                infoScript.AppendLine("        }");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("        /// <summary>");
+                infoScript.AppendLine("        /// Insert");
+                infoScript.AppendLine("        /// </summary>");
+                infoScript.AppendLine("        public void Insert()");
+                infoScript.AppendLine("        {");
+                infoScript.AppendLine("            Database db = base.GetDatabase();");
+                infoScript.AppendLine("            StringBuilder sbCmd = new StringBuilder();");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            sbCmd.Append(\"	INSERT INTO [" + tableName + "]		\");");
+                infoScript.AppendLine("            sbCmd.Append(\"		(				\");");
+                foreach (DataRow dr in ColumnsTable.Rows)
+                {
+                    if (ColumnsTable.Rows.IndexOf(dr) == 0)
+                        infoScript.AppendLine("            sbCmd.Append(\"		" + dr["ColumnName"].ToString() + "		\");");
+                    else
+                        infoScript.AppendLine("            sbCmd.Append(\"		," + dr["ColumnName"].ToString() + "		\");");
+                }
+                infoScript.AppendLine("            sbCmd.Append(\"		)				\");");
+                infoScript.AppendLine("            sbCmd.Append(\"	VALUES		\");");
+                infoScript.AppendLine("            sbCmd.Append(\"		(				\");");
+                foreach (DataRow dr in ColumnsTable.Rows)
+                {
+                    if (ColumnsTable.Rows.IndexOf(dr) == 0)
+                        infoScript.AppendLine("            sbCmd.Append(\"		@" + dr["ColumnName"].ToString() + "		\");");
+                    else
+                        infoScript.AppendLine("            sbCmd.Append(\"		,@" + dr["ColumnName"].ToString() + "		\");");
+                }
+                infoScript.AppendLine("            sbCmd.Append(\"		)				\");");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            DbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            #region Add In Parameter");
+                foreach (DataRow dr in ColumnsTable.Rows)
+                {
+                    string[] wording = generateWording(dr).Split('@');
+                    if (wording[1] == "XmlDocument")
+                    {
+                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType.Xml, this._" + dr["ColumnName"].ToString() + ".OuterXml);");
+                    }
+                    else
+                    {
+                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
+                    }
+                }
+                infoScript.AppendLine("            #endregion");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            try");
+                infoScript.AppendLine("            {");
+                infoScript.AppendLine("                db.ExecuteNonQuery(dbCommand);");
+                if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
+                    infoScript.AppendLine("                base.IsSuccess = true;");
+                else
+                    infoScript.AppendLine("                base.ErrFlag = false;");
+                infoScript.AppendLine("            }");
+                infoScript.AppendLine("            catch (Exception ex)");
+                infoScript.AppendLine("            {");
+                infoScript.AppendLine("            }");
+                infoScript.AppendLine("        }");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("        /// <summary>");
+                infoScript.AppendLine("        /// Update");
+                infoScript.AppendLine("        /// </summary>");
+                infoScript.AppendLine("        public void Update()");
+                infoScript.AppendLine("        {");
+                infoScript.AppendLine("            Database db = base.GetDatabase();");
+                infoScript.AppendLine("            StringBuilder sbCmd = new StringBuilder();");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            sbCmd.Append(\"	UPDATE [" + tableName + "] SET 		\");");
+                DataTable dt = new DataTable();
+                dt = ColumnsTable.Copy();
+                foreach (DataRow dr in dt.Rows)
+                {
+                    if (dr["isPK"].ToString() == "Y")
+                    {
+                        dr.Delete();
+                    }
+                }
+                dt.AcceptChanges();
+                foreach (DataRow dr in dt.Rows)
+                {
+                    string[] wording = generateWording(dr).Split('@');
+                    if (dt.Rows.IndexOf(dr) == 0)
+                        infoScript.AppendLine("            sbCmd.Append(\"		" + dr["ColumnName"].ToString() + " = @" + dr["ColumnName"].ToString() + " 		\");");
+                    else
+                        infoScript.AppendLine("            sbCmd.Append(\"		," + dr["ColumnName"].ToString() + " = @" + dr["ColumnName"].ToString() + " 		\");");
+                }
+                infoScript.AppendLine("            sbCmd.Append(\"	WHERE (1=1) \");");
+                foreach (string ColumnName in pkColumns)
+                {
+                    infoScript.AppendLine("            sbCmd.Append(\"		AND " + ColumnName + " = @" + ColumnName + " 		\");");
+                }
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            DbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            #region Add In Parameter");
+                foreach (DataRow dr in ColumnsTable.Rows)
+                {
+                    string[] wording = generateWording(dr).Split('@');
+                    if (wording[1] == "XmlDocument")
+                    {
+                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType.Xml, this._" + dr["ColumnName"].ToString() + ".OuterXml);");
+                    }
+                    else
+                    {
+                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
+                    }
+                }
+                infoScript.AppendLine("            #endregion");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            try");
+                infoScript.AppendLine("            {");
+                infoScript.AppendLine("                db.ExecuteNonQuery(dbCommand);");
+                if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
+                    infoScript.AppendLine("                base.IsSuccess = true;");
+                else
+                    infoScript.AppendLine("                base.ErrFlag = false;");
+                infoScript.AppendLine("            }");
+                infoScript.AppendLine("            catch (Exception ex)");
+                infoScript.AppendLine("            {");
+                infoScript.AppendLine("            }");
+                infoScript.AppendLine("        }");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("        /// <summary>");
+                infoScript.AppendLine("        /// Delete");
+                infoScript.AppendLine("        /// </summary>");
+                infoScript.Append("        public void Delete(");
+
+                foreach (DataRow dr in ColumnsTable.Rows)
+                {
+                    string[] wording = generateWording(dr).Split('@');
+                    if (dr["isPK"].ToString() == "Y")
+                    {
+                        if (ColumnsTable.Rows.IndexOf(dr) == pkColumns.Count - 1)
+                        {
+                            infoScript.Append(wording[1] + " i" + dr["ColumnName"].ToString());
+                        }
+                        else
+                        {
+                            infoScript.Append(wording[1] + " i" + dr["ColumnName"].ToString() + ", ");
+                        }
+                    }
+                }
+
+                infoScript.AppendLine(")");
+                infoScript.AppendLine("        {");
+                infoScript.AppendLine("            Database db = base.GetDatabase();");
+                infoScript.AppendLine("            StringBuilder sbCmd = new StringBuilder();");
+                infoScript.AppendLine("");
+
+                foreach (string pkColumn in pkColumns)
+                {
+                    infoScript.AppendLine("            this._" + pkColumn + " = i" + pkColumn + ";");
+                }
+
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            sbCmd.Append(\"	DELETE [" + tableName + "]		\");");
+                infoScript.AppendLine("            sbCmd.Append(\"	WHERE (1=1) 		\");");
+                foreach (string ColumnName in pkColumns)
+                {
+                    infoScript.AppendLine("            sbCmd.Append(\"		AND " + ColumnName + " = @" + ColumnName + " 		\");");
+                }
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            DbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            #region Add In Parameter");
+                infoScript.AppendLine("");
+                foreach (DataRow dr in ColumnsTable.Rows)
+                {
+                    string[] wording = generateWording(dr).Split('@');
+                    if (dr["isPK"].ToString() == "Y")
+                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
+                }
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            #endregion");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            try");
+                infoScript.AppendLine("            {");
+                infoScript.AppendLine("                db.ExecuteNonQuery(dbCommand);");
+                if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
+                    infoScript.AppendLine("                base.IsSuccess = true;");
+                else
+                    infoScript.AppendLine("                base.ErrFlag = false;");
+                infoScript.AppendLine("            }");
+                infoScript.AppendLine("            catch (Exception ex)");
+                infoScript.AppendLine("            {");
+                infoScript.AppendLine("            }");
+                infoScript.AppendLine("        }");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("");
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                infoScript.AppendLine("");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("        /// <summary>");
+                infoScript.AppendLine("        /// Save用法： 1. Info.Load() 2. Set Value 3. Info.Save()");
+                infoScript.AppendLine("        /// </summary>	");
+                infoScript.AppendLine("        public void Save()");
+                infoScript.AppendLine("        {");
+                infoScript.AppendLine("            if (base.EditMode == EditType.Insert)");
+                infoScript.AppendLine("            {");
+                infoScript.AppendLine("                this.Insert();");
+                infoScript.AppendLine("            }");
+                infoScript.AppendLine("            else");
+                infoScript.AppendLine("            {");
+                infoScript.AppendLine("                this.Update();");
+                infoScript.AppendLine("            }");
+                infoScript.AppendLine("        }");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("        #endregion");
+                infoScript.AppendLine("    }");
+                infoScript.AppendLine("}");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("#region Use Sample");
+                infoScript.AppendLine("/*");
+                infoScript.AppendLine("Vista.Information." + tableName + "Info Info = new Vista.Information." + tableName + "Info();");
+
+                foreach (DataRow dr in ColumnsTable.Rows)
+                {
+                    string[] wording = generateWording(dr).Split('@');
+                    infoScript.AppendLine("Info." + String.Format("{0,-50}", dr["ColumnName"].ToString() + wording[0].ToString() + ";") + "//" + dr["Description"].ToString().Replace("\r\n", "\t"));
+                }
+                infoScript.AppendLine("*/");
+                infoScript.AppendLine("#endregion");
+                infoScript.AppendLine("");
+                #endregion
+
+                tecInfoScript.Text = infoScript.ToString();
+            }
         }
         #endregion
 
