@@ -29,11 +29,11 @@ namespace TestForm
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabConnTest = new System.Windows.Forms.TabPage();
             this.gvConnStrings = new System.Windows.Forms.DataGridView();
@@ -95,7 +95,7 @@ namespace TestForm
             this.tabControl1.Controls.Add(this.tabConnTest);
             this.tabControl1.Controls.Add(this.tabGenerateInfoScript);
             this.tabControl1.Location = new System.Drawing.Point(17, 16);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(2343, 981);
@@ -107,9 +107,9 @@ namespace TestForm
             this.tabConnTest.Controls.Add(this.gvConnStrings);
             this.tabConnTest.Controls.Add(this.groupBox1);
             this.tabConnTest.Location = new System.Drawing.Point(4, 25);
-            this.tabConnTest.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabConnTest.Margin = new System.Windows.Forms.Padding(4);
             this.tabConnTest.Name = "tabConnTest";
-            this.tabConnTest.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabConnTest.Padding = new System.Windows.Forms.Padding(4);
             this.tabConnTest.Size = new System.Drawing.Size(2335, 952);
             this.tabConnTest.TabIndex = 0;
             this.tabConnTest.Text = "連線測試";
@@ -126,7 +126,7 @@ namespace TestForm
             this.ColUID,
             this.ColPassword});
             this.gvConnStrings.Location = new System.Drawing.Point(8, 135);
-            this.gvConnStrings.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gvConnStrings.Margin = new System.Windows.Forms.Padding(4);
             this.gvConnStrings.Name = "gvConnStrings";
             this.gvConnStrings.ReadOnly = true;
             this.gvConnStrings.RowHeadersWidth = 51;
@@ -148,8 +148,8 @@ namespace TestForm
             // ColConnID
             // 
             this.ColConnID.DataPropertyName = "ConnID";
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ColConnID.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ColConnID.DefaultCellStyle = dataGridViewCellStyle6;
             this.ColConnID.HeaderText = "ConnID";
             this.ColConnID.MinimumWidth = 6;
             this.ColConnID.Name = "ColConnID";
@@ -159,8 +159,8 @@ namespace TestForm
             // ColServerName
             // 
             this.ColServerName.DataPropertyName = "ServerName";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ColServerName.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ColServerName.DefaultCellStyle = dataGridViewCellStyle7;
             this.ColServerName.HeaderText = "ServerName";
             this.ColServerName.MinimumWidth = 6;
             this.ColServerName.Name = "ColServerName";
@@ -170,8 +170,8 @@ namespace TestForm
             // ColDBName
             // 
             this.ColDBName.DataPropertyName = "DBName";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ColDBName.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ColDBName.DefaultCellStyle = dataGridViewCellStyle8;
             this.ColDBName.HeaderText = "DBName";
             this.ColDBName.MinimumWidth = 6;
             this.ColDBName.Name = "ColDBName";
@@ -181,8 +181,8 @@ namespace TestForm
             // ColUID
             // 
             this.ColUID.DataPropertyName = "UID";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ColUID.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ColUID.DefaultCellStyle = dataGridViewCellStyle9;
             this.ColUID.HeaderText = "UID";
             this.ColUID.MinimumWidth = 6;
             this.ColUID.Name = "ColUID";
@@ -192,8 +192,8 @@ namespace TestForm
             // ColPassword
             // 
             this.ColPassword.DataPropertyName = "Password";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.ColPassword.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ColPassword.DefaultCellStyle = dataGridViewCellStyle10;
             this.ColPassword.HeaderText = "Password";
             this.ColPassword.MinimumWidth = 6;
             this.ColPassword.Name = "ColPassword";
@@ -215,9 +215,9 @@ namespace TestForm
             this.groupBox1.Controls.Add(this.tbConnID);
             this.groupBox1.Controls.Add(this.lbServerName);
             this.groupBox1.Location = new System.Drawing.Point(8, 8);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox1.Size = new System.Drawing.Size(2316, 120);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
@@ -226,7 +226,7 @@ namespace TestForm
             // btnSaveConnID
             // 
             this.btnSaveConnID.Location = new System.Drawing.Point(1379, 29);
-            this.btnSaveConnID.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnSaveConnID.Margin = new System.Windows.Forms.Padding(4);
             this.btnSaveConnID.Name = "btnSaveConnID";
             this.btnSaveConnID.Size = new System.Drawing.Size(255, 52);
             this.btnSaveConnID.TabIndex = 11;
@@ -237,7 +237,7 @@ namespace TestForm
             // btnConnTest
             // 
             this.btnConnTest.Location = new System.Drawing.Point(1116, 29);
-            this.btnConnTest.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnConnTest.Margin = new System.Windows.Forms.Padding(4);
             this.btnConnTest.Name = "btnConnTest";
             this.btnConnTest.Size = new System.Drawing.Size(255, 52);
             this.btnConnTest.TabIndex = 10;
@@ -248,7 +248,7 @@ namespace TestForm
             // tbPassword
             // 
             this.tbPassword.Location = new System.Drawing.Point(975, 44);
-            this.tbPassword.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbPassword.Margin = new System.Windows.Forms.Padding(4);
             this.tbPassword.Name = "tbPassword";
             this.tbPassword.Size = new System.Drawing.Size(132, 25);
             this.tbPassword.TabIndex = 9;
@@ -266,7 +266,7 @@ namespace TestForm
             // tbUID
             // 
             this.tbUID.Location = new System.Drawing.Point(749, 44);
-            this.tbUID.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbUID.Margin = new System.Windows.Forms.Padding(4);
             this.tbUID.Name = "tbUID";
             this.tbUID.Size = new System.Drawing.Size(132, 25);
             this.tbUID.TabIndex = 7;
@@ -284,7 +284,7 @@ namespace TestForm
             // tbDBName
             // 
             this.tbDBName.Location = new System.Drawing.Point(555, 44);
-            this.tbDBName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbDBName.Margin = new System.Windows.Forms.Padding(4);
             this.tbDBName.Name = "tbDBName";
             this.tbDBName.Size = new System.Drawing.Size(132, 25);
             this.tbDBName.TabIndex = 5;
@@ -302,7 +302,7 @@ namespace TestForm
             // tbServerName
             // 
             this.tbServerName.Location = new System.Drawing.Point(329, 44);
-            this.tbServerName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbServerName.Margin = new System.Windows.Forms.Padding(4);
             this.tbServerName.Name = "tbServerName";
             this.tbServerName.Size = new System.Drawing.Size(132, 25);
             this.tbServerName.TabIndex = 3;
@@ -320,7 +320,7 @@ namespace TestForm
             // tbConnID
             // 
             this.tbConnID.Location = new System.Drawing.Point(85, 44);
-            this.tbConnID.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbConnID.Margin = new System.Windows.Forms.Padding(4);
             this.tbConnID.Name = "tbConnID";
             this.tbConnID.Size = new System.Drawing.Size(132, 25);
             this.tbConnID.TabIndex = 1;
@@ -342,9 +342,9 @@ namespace TestForm
             this.tabGenerateInfoScript.Controls.Add(this.CBLTables);
             this.tabGenerateInfoScript.Controls.Add(this.groupBox2);
             this.tabGenerateInfoScript.Location = new System.Drawing.Point(4, 25);
-            this.tabGenerateInfoScript.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabGenerateInfoScript.Margin = new System.Windows.Forms.Padding(4);
             this.tabGenerateInfoScript.Name = "tabGenerateInfoScript";
-            this.tabGenerateInfoScript.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabGenerateInfoScript.Padding = new System.Windows.Forms.Padding(4);
             this.tabGenerateInfoScript.Size = new System.Drawing.Size(2335, 952);
             this.tabGenerateInfoScript.TabIndex = 1;
             this.tabGenerateInfoScript.Text = "產生InformationScript";
@@ -354,7 +354,7 @@ namespace TestForm
             // 
             this.tecInfoScript.IsReadOnly = false;
             this.tecInfoScript.Location = new System.Drawing.Point(9, 560);
-            this.tecInfoScript.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tecInfoScript.Margin = new System.Windows.Forms.Padding(4);
             this.tecInfoScript.Name = "tecInfoScript";
             this.tecInfoScript.Size = new System.Drawing.Size(2315, 381);
             this.tecInfoScript.TabIndex = 6;
@@ -364,7 +364,7 @@ namespace TestForm
             // 
             this.gvTableAttributes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gvTableAttributes.Location = new System.Drawing.Point(443, 169);
-            this.gvTableAttributes.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gvTableAttributes.Margin = new System.Windows.Forms.Padding(4);
             this.gvTableAttributes.Name = "gvTableAttributes";
             this.gvTableAttributes.ReadOnly = true;
             this.gvTableAttributes.RowHeadersWidth = 51;
@@ -376,7 +376,7 @@ namespace TestForm
             // 
             this.CBLTables.FormattingEnabled = true;
             this.CBLTables.Location = new System.Drawing.Point(12, 165);
-            this.CBLTables.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CBLTables.Margin = new System.Windows.Forms.Padding(4);
             this.CBLTables.Name = "CBLTables";
             this.CBLTables.Size = new System.Drawing.Size(421, 384);
             this.CBLTables.TabIndex = 3;
@@ -396,9 +396,9 @@ namespace TestForm
             this.groupBox2.Controls.Add(this.lbSelectedConnID);
             this.groupBox2.Controls.Add(this.cbbConnID);
             this.groupBox2.Location = new System.Drawing.Point(9, 9);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox2.Size = new System.Drawing.Size(2315, 152);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
@@ -409,9 +409,9 @@ namespace TestForm
             this.gbWriteExplog.Controls.Add(this.rbWriteExplogN);
             this.gbWriteExplog.Controls.Add(this.rbWriteExplogY);
             this.gbWriteExplog.Location = new System.Drawing.Point(667, 55);
-            this.gbWriteExplog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbWriteExplog.Margin = new System.Windows.Forms.Padding(4);
             this.gbWriteExplog.Name = "gbWriteExplog";
-            this.gbWriteExplog.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbWriteExplog.Padding = new System.Windows.Forms.Padding(4);
             this.gbWriteExplog.Size = new System.Drawing.Size(227, 76);
             this.gbWriteExplog.TabIndex = 16;
             this.gbWriteExplog.TabStop = false;
@@ -422,7 +422,7 @@ namespace TestForm
             this.rbWriteExplogN.AutoSize = true;
             this.rbWriteExplogN.Checked = true;
             this.rbWriteExplogN.Location = new System.Drawing.Point(8, 45);
-            this.rbWriteExplogN.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rbWriteExplogN.Margin = new System.Windows.Forms.Padding(4);
             this.rbWriteExplogN.Name = "rbWriteExplogN";
             this.rbWriteExplogN.Size = new System.Drawing.Size(43, 19);
             this.rbWriteExplogN.TabIndex = 1;
@@ -434,7 +434,7 @@ namespace TestForm
             // 
             this.rbWriteExplogY.AutoSize = true;
             this.rbWriteExplogY.Location = new System.Drawing.Point(8, 22);
-            this.rbWriteExplogY.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rbWriteExplogY.Margin = new System.Windows.Forms.Padding(4);
             this.rbWriteExplogY.Name = "rbWriteExplogY";
             this.rbWriteExplogY.Size = new System.Drawing.Size(43, 19);
             this.rbWriteExplogY.TabIndex = 0;
@@ -447,9 +447,9 @@ namespace TestForm
             this.gbIsSuccess.Controls.Add(this.rbIsSuccessN);
             this.gbIsSuccess.Controls.Add(this.rbIsSuccessY);
             this.gbIsSuccess.Location = new System.Drawing.Point(487, 55);
-            this.gbIsSuccess.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbIsSuccess.Margin = new System.Windows.Forms.Padding(4);
             this.gbIsSuccess.Name = "gbIsSuccess";
-            this.gbIsSuccess.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbIsSuccess.Padding = new System.Windows.Forms.Padding(4);
             this.gbIsSuccess.Size = new System.Drawing.Size(156, 76);
             this.gbIsSuccess.TabIndex = 16;
             this.gbIsSuccess.TabStop = false;
@@ -460,7 +460,7 @@ namespace TestForm
             this.rbIsSuccessN.AutoSize = true;
             this.rbIsSuccessN.Checked = true;
             this.rbIsSuccessN.Location = new System.Drawing.Point(8, 45);
-            this.rbIsSuccessN.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rbIsSuccessN.Margin = new System.Windows.Forms.Padding(4);
             this.rbIsSuccessN.Name = "rbIsSuccessN";
             this.rbIsSuccessN.Size = new System.Drawing.Size(43, 19);
             this.rbIsSuccessN.TabIndex = 1;
@@ -472,7 +472,7 @@ namespace TestForm
             // 
             this.rbIsSuccessY.AutoSize = true;
             this.rbIsSuccessY.Location = new System.Drawing.Point(8, 22);
-            this.rbIsSuccessY.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rbIsSuccessY.Margin = new System.Windows.Forms.Padding(4);
             this.rbIsSuccessY.Name = "rbIsSuccessY";
             this.rbIsSuccessY.Size = new System.Drawing.Size(43, 19);
             this.rbIsSuccessY.TabIndex = 0;
@@ -485,9 +485,9 @@ namespace TestForm
             this.gbThrowException.Controls.Add(this.rbThrowExceptionN);
             this.gbThrowException.Controls.Add(this.rbThrowExceptionY);
             this.gbThrowException.Location = new System.Drawing.Point(305, 55);
-            this.gbThrowException.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbThrowException.Margin = new System.Windows.Forms.Padding(4);
             this.gbThrowException.Name = "gbThrowException";
-            this.gbThrowException.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbThrowException.Padding = new System.Windows.Forms.Padding(4);
             this.gbThrowException.Size = new System.Drawing.Size(156, 76);
             this.gbThrowException.TabIndex = 15;
             this.gbThrowException.TabStop = false;
@@ -498,7 +498,7 @@ namespace TestForm
             this.rbThrowExceptionN.AutoSize = true;
             this.rbThrowExceptionN.Checked = true;
             this.rbThrowExceptionN.Location = new System.Drawing.Point(8, 45);
-            this.rbThrowExceptionN.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rbThrowExceptionN.Margin = new System.Windows.Forms.Padding(4);
             this.rbThrowExceptionN.Name = "rbThrowExceptionN";
             this.rbThrowExceptionN.Size = new System.Drawing.Size(43, 19);
             this.rbThrowExceptionN.TabIndex = 1;
@@ -510,7 +510,7 @@ namespace TestForm
             // 
             this.rbThrowExceptionY.AutoSize = true;
             this.rbThrowExceptionY.Location = new System.Drawing.Point(8, 22);
-            this.rbThrowExceptionY.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.rbThrowExceptionY.Margin = new System.Windows.Forms.Padding(4);
             this.rbThrowExceptionY.Name = "rbThrowExceptionY";
             this.rbThrowExceptionY.Size = new System.Drawing.Size(43, 19);
             this.rbThrowExceptionY.TabIndex = 0;
@@ -520,11 +520,10 @@ namespace TestForm
             // tbNameSpace
             // 
             this.tbNameSpace.Location = new System.Drawing.Point(733, 22);
-            this.tbNameSpace.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbNameSpace.Margin = new System.Windows.Forms.Padding(4);
             this.tbNameSpace.Name = "tbNameSpace";
             this.tbNameSpace.Size = new System.Drawing.Size(159, 25);
             this.tbNameSpace.TabIndex = 14;
-            this.tbNameSpace.Text = "Vista.Information";
             // 
             // lbNameSpace
             // 
@@ -539,7 +538,7 @@ namespace TestForm
             // btnGenerateInfo
             // 
             this.btnGenerateInfo.Location = new System.Drawing.Point(901, 21);
-            this.btnGenerateInfo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnGenerateInfo.Margin = new System.Windows.Forms.Padding(4);
             this.btnGenerateInfo.Name = "btnGenerateInfo";
             this.btnGenerateInfo.Size = new System.Drawing.Size(323, 110);
             this.btnGenerateInfo.TabIndex = 7;
@@ -562,9 +561,10 @@ namespace TestForm
             this.cbbVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbVersion.FormattingEnabled = true;
             this.cbbVersion.Items.AddRange(new object[] {
-            "Version 1"});
+            "Version 1",
+            "Version 2"});
             this.cbbVersion.Location = new System.Drawing.Point(377, 22);
-            this.cbbVersion.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbbVersion.Margin = new System.Windows.Forms.Padding(4);
             this.cbbVersion.Name = "cbbVersion";
             this.cbbVersion.Size = new System.Drawing.Size(160, 23);
             this.cbbVersion.TabIndex = 5;
@@ -572,7 +572,7 @@ namespace TestForm
             // btnLoadTable
             // 
             this.btnLoadTable.Location = new System.Drawing.Point(13, 60);
-            this.btnLoadTable.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnLoadTable.Margin = new System.Windows.Forms.Padding(4);
             this.btnLoadTable.Name = "btnLoadTable";
             this.btnLoadTable.Size = new System.Drawing.Size(284, 71);
             this.btnLoadTable.TabIndex = 2;
@@ -595,7 +595,7 @@ namespace TestForm
             this.cbbConnID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbbConnID.FormattingEnabled = true;
             this.cbbConnID.Location = new System.Drawing.Point(133, 22);
-            this.cbbConnID.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cbbConnID.Margin = new System.Windows.Forms.Padding(4);
             this.cbbConnID.Name = "cbbConnID";
             this.cbbConnID.Size = new System.Drawing.Size(160, 23);
             this.cbbConnID.TabIndex = 0;
@@ -606,7 +606,7 @@ namespace TestForm
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1924, 1012);
             this.Controls.Add(this.tabControl1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "PandamanForm";
             this.Text = "PandamanForm";

@@ -64,6 +64,39 @@ namespace TestForm
     // omitted deprecated types: ntext, text
     // not supported by enum: numeric, FILESTREAM, rowversion, sql_variant
 };
+
+        internal static readonly Dictionary<string, string> SqlDbTypeToUpper = new Dictionary<string, string>
+{
+    { "bigint","BigInt" },
+    { "binary","Binary" },
+    { "bit","Bit" },
+    { "char","Char" },
+    { "date","Date" },
+    { "datetime","DateTime" },
+    { "datetime2","DateTime2" },
+    { "datetimeoffset","DateTimeOffset" },
+    { "decimal","Decimal" },
+    { "float","Float" },
+    { "image","Image" },
+    { "int","Int" },
+    { "Money","Money" },
+    { "nchar","NChar" },
+    { "nvarchar","NVarChar" },
+    { "real","Real" },
+    { "smalldatetime","SmallDateTime" },
+    { "smallint","SmallInt" },
+    { "smallmoney","SmallMoney" },
+    { "time","Time" },
+    { "tinyint","TinyInt" },
+    { "uniqueidentifier","UniqueIdentifier" },
+    { "varbinary","VarBinary" },
+    { "varchar","VarChar" },
+    { "xml","Xml" },
+    { "ntext","NText" }
+    // omitted special types: timestamp
+    // omitted deprecated types: ntext, text
+    // not supported by enum: numeric, FILESTREAM, rowversion, sql_variant
+};
         #endregion
 
         public PandamanForm()
@@ -926,13 +959,10 @@ namespace TestForm
 
                 StringBuilder infoScript = new StringBuilder();
 
-                infoScript.AppendLine("using System;");
-                infoScript.AppendLine("using System.Collections.Generic;");
                 infoScript.AppendLine("using System.Data;");
-                infoScript.AppendLine("using System.Data.Common;");
                 infoScript.AppendLine("using System.Text;");
-                infoScript.AppendLine("using System.Xml;");
-                infoScript.AppendLine("using System.Configuration;");
+                infoScript.AppendLine("using System.Data.SqlClient;");
+                infoScript.AppendLine("using System.Diagnostics;");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("namespace " + tbNameSpace.Text);
                 infoScript.AppendLine("{");
@@ -942,9 +972,10 @@ namespace TestForm
                 infoScript.AppendLine("        /// <summary>");
                 infoScript.AppendLine("        /// Constructors");
                 infoScript.AppendLine("        /// </summary>		");
-                infoScript.AppendLine("        public " + tableName + "Info()");
+                infoScript.AppendLine("        public " + tableName + "Info(string connString)");
                 infoScript.AppendLine("        {");
                 infoScript.AppendLine("            this.Init();");
+                infoScript.AppendLine("            _ConnectionString = connString;");
                 infoScript.AppendLine("        }");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("");
@@ -963,6 +994,7 @@ namespace TestForm
                 infoScript.AppendLine("        ");
                 infoScript.AppendLine("        ");
                 infoScript.AppendLine("        #region Private Properties");
+                infoScript.AppendLine("        private string _ConnectionString;");
 
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
@@ -1025,17 +1057,24 @@ namespace TestForm
                     infoScript.AppendLine("            this._" + pkColumn + " = i" + pkColumn + ";");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            Database db = base.GetDatabase();");
-                infoScript.AppendLine("            StringBuilder sbCmd = new StringBuilder();");
+                infoScript.AppendLine("            using (SqlCommand command = new SqlCommand())");
+                infoScript.AppendLine("            {");
+                infoScript.AppendLine("                SqlConnection connection = new SqlConnection(_ConnectionString);");
+                infoScript.AppendLine("                connection.Open();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            sbCmd.Append(\"   SELECT * FROM [" + tableName + "] WITH (Nolock) \");");
-                infoScript.AppendLine("            sbCmd.Append(\"   WHERE(1 = 1) \");");
+                infoScript.AppendLine("                try");
+                infoScript.AppendLine("                {");
+                infoScript.AppendLine("                    StringBuilder sbCmd = new StringBuilder();");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("                    sbCmd.Append(\"   SELECT * FROM [" + tableName + "] WITH (Nolock) \");");
+                infoScript.AppendLine("                    sbCmd.Append(\"   WHERE(1 = 1) \");");
                 foreach (string pkColumn in pkColumns)
                 {
-                    infoScript.AppendLine("            sbCmd.Append(\"       AND " + pkColumn + " = @" + pkColumn + "      \");");
+                    infoScript.AppendLine("                    sbCmd.Append(\"       AND " + pkColumn + " = @" + pkColumn + "      \");");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            DbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
+                infoScript.AppendLine("                command.Connection = connection;");
+                infoScript.AppendLine("                command.CommandText = sbCmd.ToString();");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("            #region Add In Parameter");
                 infoScript.AppendLine("");
@@ -1043,22 +1082,21 @@ namespace TestForm
                 {
                     string[] wording = generateWording(dr).Split('@');
                     if (dr["isPK"].ToString() == "Y")
-                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
+                        infoScript.AppendLine("                command.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType." + SqlDbTypeToUpper[dr["DataType"].ToString()] + ").Value = this._" + dr["ColumnName"].ToString() + ";");
                 }
                 infoScript.AppendLine("");
                 infoScript.AppendLine("            #endregion");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            try");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                DataTable dtTemp = db.ExecuteDataSet(dbCommand).Tables[0];");
+                infoScript.AppendLine("            IDataReader dataReader = command.ExecuteReader();");
+                infoScript.AppendLine("            DataTable dtTemp = new DataTable();");
+                infoScript.AppendLine("            dtTemp.Load(dataReader);");
+                infoScript.AppendLine("");
                 infoScript.AppendLine("                if (dtTemp.Rows.Count == 0)");
                 infoScript.AppendLine("                {");
-                infoScript.AppendLine("                    base.EditMode = EditType.Insert;");
                 infoScript.AppendLine("                    Result = false;");
                 infoScript.AppendLine("                }");
                 infoScript.AppendLine("                else");
                 infoScript.AppendLine("                {");
-                infoScript.AppendLine("                    base.EditMode = EditType.Update;");
                 infoScript.AppendLine("                    Result = true;");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("                    DataRow dr = dtTemp.Rows[0];");
@@ -1068,16 +1106,26 @@ namespace TestForm
                     infoScript.AppendLine("\t\t\t\t\t" + wording[3]);
                 }
                 infoScript.AppendLine("                }");
-                if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
-                    infoScript.AppendLine("                base.IsSuccess = true;");
-                else
-                    infoScript.AppendLine("                base.ErrFlag = true;");
                 infoScript.AppendLine("            }");
                 infoScript.AppendLine("            catch (Exception ex)");
                 infoScript.AppendLine("            {");
-                infoScript.AppendLine("            }");
+                infoScript.AppendLine("                StackTrace stack = new StackTrace();");
+                infoScript.AppendLine("                StackFrame frame = stack.GetFrame(0);");
+                infoScript.AppendLine("                string className = frame.GetMethod().DeclaringType.FullName;");
+                infoScript.AppendLine("                string methodName = frame.GetMethod().Name;");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            return Result;");
+                infoScript.AppendLine("            ExceptionLogInfo exceptionLog = new ExceptionLogInfo(_ConnectionString);");
+                infoScript.AppendLine("            exceptionLog.ExceptionClass = className;");
+                infoScript.AppendLine("            exceptionLog.ExceptionMethod = methodName;");
+                infoScript.AppendLine("            exceptionLog.ExceptionReason = ex.ToString();");
+                infoScript.AppendLine("            exceptionLog.ExceptionDate = DateTime.Now;");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            exceptionLog.Insert();");
+                infoScript.AppendLine("            }");
+                infoScript.AppendLine("            connection.Close();");
+                infoScript.AppendLine("        }");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("        return Result;");
                 infoScript.AppendLine("        }");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("");
@@ -1086,8 +1134,14 @@ namespace TestForm
                 infoScript.AppendLine("        /// </summary>");
                 infoScript.AppendLine("        public void Insert()");
                 infoScript.AppendLine("        {");
-                infoScript.AppendLine("            Database db = base.GetDatabase();");
-                infoScript.AppendLine("            StringBuilder sbCmd = new StringBuilder();");
+                infoScript.AppendLine("            using (SqlCommand command = new SqlCommand())");
+                infoScript.AppendLine("            {");
+                infoScript.AppendLine("                SqlConnection connection = new SqlConnection(_ConnectionString);");
+                infoScript.AppendLine("                connection.Open();");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("                try");
+                infoScript.AppendLine("                {");
+                infoScript.AppendLine("                    StringBuilder sbCmd = new StringBuilder();");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("            sbCmd.Append(\"	INSERT INTO [" + tableName + "]		\");");
                 infoScript.AppendLine("            sbCmd.Append(\"		(				\");");
@@ -1110,7 +1164,9 @@ namespace TestForm
                 }
                 infoScript.AppendLine("            sbCmd.Append(\"		)				\");");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            DbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("                command.Connection = connection;");
+                infoScript.AppendLine("                command.CommandText = sbCmd.ToString();");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("            #region Add In Parameter");
                 foreach (DataRow dr in ColumnsTable.Rows)
@@ -1118,26 +1174,35 @@ namespace TestForm
                     string[] wording = generateWording(dr).Split('@');
                     if (wording[1] == "XmlDocument")
                     {
-                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType.Xml, this._" + dr["ColumnName"].ToString() + ".OuterXml);");
+                        infoScript.AppendLine("            command.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType.Xml).Value = this._" + dr["ColumnName"].ToString() + ".OuterXml);");
                     }
                     else
                     {
-                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
+                        infoScript.AppendLine("            command.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType." + dr["DataType"].ToString() + ").Value = this._" + dr["ColumnName"].ToString() + ";");
                     }
                 }
+                infoScript.AppendLine("");
                 infoScript.AppendLine("            #endregion");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            try");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                db.ExecuteNonQuery(dbCommand);");
-                if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
-                    infoScript.AppendLine("                base.IsSuccess = true;");
-                else
-                    infoScript.AppendLine("                base.ErrFlag = false;");
+                infoScript.AppendLine("                command.ExecuteNonQuery();");
                 infoScript.AppendLine("            }");
                 infoScript.AppendLine("            catch (Exception ex)");
                 infoScript.AppendLine("            {");
+                infoScript.AppendLine("                StackTrace stack = new StackTrace();");
+                infoScript.AppendLine("                StackFrame frame = stack.GetFrame(0);");
+                infoScript.AppendLine("                string className = frame.GetMethod().DeclaringType.FullName;");
+                infoScript.AppendLine("                string methodName = frame.GetMethod().Name;");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            ExceptionLogInfo exceptionLog = new ExceptionLogInfo(_ConnectionString);");
+                infoScript.AppendLine("            exceptionLog.ExceptionClass = className;");
+                infoScript.AppendLine("            exceptionLog.ExceptionMethod = methodName;");
+                infoScript.AppendLine("            exceptionLog.ExceptionReason = ex.ToString();");
+                infoScript.AppendLine("            exceptionLog.ExceptionDate = DateTime.Now;");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            exceptionLog.Insert();");
                 infoScript.AppendLine("            }");
+                infoScript.AppendLine("            connection.Close();");
+                infoScript.AppendLine("        }");
                 infoScript.AppendLine("        }");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("");
@@ -1146,7 +1211,13 @@ namespace TestForm
                 infoScript.AppendLine("        /// </summary>");
                 infoScript.AppendLine("        public void Update()");
                 infoScript.AppendLine("        {");
-                infoScript.AppendLine("            Database db = base.GetDatabase();");
+                infoScript.AppendLine("            using (SqlCommand command = new SqlCommand())");
+                infoScript.AppendLine("            {");
+                infoScript.AppendLine("                SqlConnection connection = new SqlConnection(_ConnectionString);");
+                infoScript.AppendLine("                connection.Open();");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("                try");
+                infoScript.AppendLine("                {");
                 infoScript.AppendLine("            StringBuilder sbCmd = new StringBuilder();");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("            sbCmd.Append(\"	UPDATE [" + tableName + "] SET 		\");");
@@ -1174,7 +1245,8 @@ namespace TestForm
                     infoScript.AppendLine("            sbCmd.Append(\"		AND " + ColumnName + " = @" + ColumnName + " 		\");");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            DbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
+                infoScript.AppendLine("                command.Connection = connection;");
+                infoScript.AppendLine("                command.CommandText = sbCmd.ToString();");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("            #region Add In Parameter");
                 foreach (DataRow dr in ColumnsTable.Rows)
@@ -1182,26 +1254,34 @@ namespace TestForm
                     string[] wording = generateWording(dr).Split('@');
                     if (wording[1] == "XmlDocument")
                     {
-                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType.Xml, this._" + dr["ColumnName"].ToString() + ".OuterXml);");
+                        infoScript.AppendLine("            command.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType.Xml).Value = this._" + dr["ColumnName"].ToString() + ".OuterXml;");
                     }
                     else
                     {
-                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
+                        infoScript.AppendLine("            command.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType." + dr["DataType"].ToString() + ").Value = this._" + dr["ColumnName"].ToString() + ";");
                     }
                 }
                 infoScript.AppendLine("            #endregion");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            try");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                db.ExecuteNonQuery(dbCommand);");
-                if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
-                    infoScript.AppendLine("                base.IsSuccess = true;");
-                else
-                    infoScript.AppendLine("                base.ErrFlag = false;");
+                infoScript.AppendLine("                command.ExecuteNonQuery();");
                 infoScript.AppendLine("            }");
                 infoScript.AppendLine("            catch (Exception ex)");
                 infoScript.AppendLine("            {");
+                infoScript.AppendLine("                StackTrace stack = new StackTrace();");
+                infoScript.AppendLine("                StackFrame frame = stack.GetFrame(0);");
+                infoScript.AppendLine("                string className = frame.GetMethod().DeclaringType.FullName;");
+                infoScript.AppendLine("                string methodName = frame.GetMethod().Name;");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            ExceptionLogInfo exceptionLog = new ExceptionLogInfo(_ConnectionString);");
+                infoScript.AppendLine("            exceptionLog.ExceptionClass = className;");
+                infoScript.AppendLine("            exceptionLog.ExceptionMethod = methodName;");
+                infoScript.AppendLine("            exceptionLog.ExceptionReason = ex.ToString();");
+                infoScript.AppendLine("            exceptionLog.ExceptionDate = DateTime.Now;");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            exceptionLog.Insert();");
                 infoScript.AppendLine("            }");
+                infoScript.AppendLine("            connection.Close();");
+                infoScript.AppendLine("        }");
                 infoScript.AppendLine("        }");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("");
@@ -1228,15 +1308,21 @@ namespace TestForm
 
                 infoScript.AppendLine(")");
                 infoScript.AppendLine("        {");
-                infoScript.AppendLine("            Database db = base.GetDatabase();");
-                infoScript.AppendLine("            StringBuilder sbCmd = new StringBuilder();");
-                infoScript.AppendLine("");
 
                 foreach (string pkColumn in pkColumns)
                 {
                     infoScript.AppendLine("            this._" + pkColumn + " = i" + pkColumn + ";");
                 }
 
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            using (SqlCommand command = new SqlCommand())");
+                infoScript.AppendLine("            {");
+                infoScript.AppendLine("                SqlConnection connection = new SqlConnection(_ConnectionString);");
+                infoScript.AppendLine("                connection.Open();");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("                try");
+                infoScript.AppendLine("                {");
+                infoScript.AppendLine("                    StringBuilder sbCmd = new StringBuilder();");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("            sbCmd.Append(\"	DELETE [" + tableName + "]		\");");
                 infoScript.AppendLine("            sbCmd.Append(\"	WHERE (1=1) 		\");");
@@ -1245,7 +1331,8 @@ namespace TestForm
                     infoScript.AppendLine("            sbCmd.Append(\"		AND " + ColumnName + " = @" + ColumnName + " 		\");");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            DbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
+                infoScript.AppendLine("                command.Connection = connection;");
+                infoScript.AppendLine("                command.CommandText = sbCmd.ToString();");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("            #region Add In Parameter");
                 infoScript.AppendLine("");
@@ -1253,41 +1340,30 @@ namespace TestForm
                 {
                     string[] wording = generateWording(dr).Split('@');
                     if (dr["isPK"].ToString() == "Y")
-                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
+                        infoScript.AppendLine("            command.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType." + dr["DataType"].ToString() + ").Value = this._" + dr["ColumnName"].ToString() + ";");
                 }
                 infoScript.AppendLine("");
                 infoScript.AppendLine("            #endregion");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            try");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                db.ExecuteNonQuery(dbCommand);");
-                if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
-                    infoScript.AppendLine("                base.IsSuccess = true;");
-                else
-                    infoScript.AppendLine("                base.ErrFlag = false;");
+                infoScript.AppendLine("                command.ExecuteNonQuery();");
                 infoScript.AppendLine("            }");
                 infoScript.AppendLine("            catch (Exception ex)");
                 infoScript.AppendLine("            {");
+                infoScript.AppendLine("                StackTrace stack = new StackTrace();");
+                infoScript.AppendLine("                StackFrame frame = stack.GetFrame(0);");
+                infoScript.AppendLine("                string className = frame.GetMethod().DeclaringType.FullName;");
+                infoScript.AppendLine("                string methodName = frame.GetMethod().Name;");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            ExceptionLogInfo exceptionLog = new ExceptionLogInfo(_ConnectionString);");
+                infoScript.AppendLine("            exceptionLog.ExceptionClass = className;");
+                infoScript.AppendLine("            exceptionLog.ExceptionMethod = methodName;");
+                infoScript.AppendLine("            exceptionLog.ExceptionReason = ex.ToString();");
+                infoScript.AppendLine("            exceptionLog.ExceptionDate = DateTime.Now;");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("            exceptionLog.Insert();");
                 infoScript.AppendLine("            }");
+                infoScript.AppendLine("            connection.Close();");
                 infoScript.AppendLine("        }");
-                infoScript.AppendLine("");
-                infoScript.AppendLine("");
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                infoScript.AppendLine("");
-                infoScript.AppendLine("");
-                infoScript.AppendLine("        /// <summary>");
-                infoScript.AppendLine("        /// Save用法： 1. Info.Load() 2. Set Value 3. Info.Save()");
-                infoScript.AppendLine("        /// </summary>	");
-                infoScript.AppendLine("        public void Save()");
-                infoScript.AppendLine("        {");
-                infoScript.AppendLine("            if (base.EditMode == EditType.Insert)");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                this.Insert();");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("            else");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                this.Update();");
-                infoScript.AppendLine("            }");
                 infoScript.AppendLine("        }");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("        #endregion");
