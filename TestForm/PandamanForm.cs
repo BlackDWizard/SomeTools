@@ -356,38 +356,38 @@ namespace TestForm
             StringBuilder sbCmd = new StringBuilder();
 
             sbCmd.AppendLine("SELECT IC.TABLE_NAME AS TableName,");
-            sbCmd.AppendLine("       IC.COLUMN_NAME AS ColumnName,");
-            sbCmd.AppendLine("       IC.ORDINAL_POSITION AS SN,");
-            sbCmd.AppendLine("       CASE WHEN PK.COLUMN_NAME = IC.COLUMN_NAME THEN 'Y' ELSE 'N' END isPK,");
-            sbCmd.AppendLine("       IC.DATA_TYPE AS DataType,");
-            sbCmd.AppendLine("       IC.CHARACTER_MAXIMUM_LENGTH AS Length,");
-            sbCmd.AppendLine("       IC.IS_NULLABLE AS isNullable,");
-            sbCmd.AppendLine("       Identity_Description.Description,");
-            sbCmd.AppendLine("       CASE WHEN Identity_Description.isIdentity = 0 THEN 'N' WHEN Identity_Description.isIdentity = 1 THEN 'Y' END isIdentity");
-            sbCmd.AppendLine("       FROM INFORMATION_SCHEMA.COLUMNS AS IC WITH (Nolock) ");
+            sbCmd.AppendLine("\t   IC.COLUMN_NAME AS ColumnName,");
+            sbCmd.AppendLine("\t   IC.ORDINAL_POSITION AS SN,");
+            sbCmd.AppendLine("\t   CASE WHEN PK.COLUMN_NAME = IC.COLUMN_NAME THEN 'Y' ELSE 'N' END isPK,");
+            sbCmd.AppendLine("\t   IC.DATA_TYPE AS DataType,");
+            sbCmd.AppendLine("\t   IC.CHARACTER_MAXIMUM_LENGTH AS Length,");
+            sbCmd.AppendLine("\t   IC.IS_NULLABLE AS isNullable,");
+            sbCmd.AppendLine("\t   Identity_Description.Description,");
+            sbCmd.AppendLine("\t   CASE WHEN Identity_Description.isIdentity = 0 THEN 'N' WHEN Identity_Description.isIdentity = 1 THEN 'Y' END isIdentity");
+            sbCmd.AppendLine("\t   FROM INFORMATION_SCHEMA.COLUMNS AS IC WITH (Nolock) ");
 
-            sbCmd.AppendLine("       LEFT JOIN ");
-            sbCmd.AppendLine("       (SELECT ST.name [Table],");
-            sbCmd.AppendLine("       SC.name [Column], ");
-            sbCmd.AppendLine("       SC.is_identity [isIdentity], ");
-            sbCmd.AppendLine("       SEP.value [Description] ");
-            sbCmd.AppendLine("       FROM sys.tables ST ");
-            sbCmd.AppendLine("       INNER JOIN sys.columns SC on ST.object_id = SC.object_id ");
-            sbCmd.AppendLine("       LEFT JOIN sys.extended_properties SEP on ST.object_id = SEP.major_id ");
-            sbCmd.AppendLine("       AND SC.column_id = SEP.minor_id ");
-            sbCmd.AppendLine("       AND SEP.name = 'MS_Description' ");
-            sbCmd.AppendLine("       WHERE ST.name = @TABLE_NAME) AS Identity_Description  ");
-            sbCmd.AppendLine("       ON Identity_Description.[Column] = IC.COLUMN_NAME ");
+            sbCmd.AppendLine("\t   LEFT JOIN ");
+            sbCmd.AppendLine("\t   (SELECT ST.name [Table],");
+            sbCmd.AppendLine("\t   SC.name [Column], ");
+            sbCmd.AppendLine("\t   SC.is_identity [isIdentity], ");
+            sbCmd.AppendLine("\t   SEP.value [Description] ");
+            sbCmd.AppendLine("\t   FROM sys.tables ST ");
+            sbCmd.AppendLine("\t   INNER JOIN sys.columns SC on ST.object_id = SC.object_id ");
+            sbCmd.AppendLine("\t   LEFT JOIN sys.extended_properties SEP on ST.object_id = SEP.major_id ");
+            sbCmd.AppendLine("\t   AND SC.column_id = SEP.minor_id ");
+            sbCmd.AppendLine("\t   AND SEP.name = 'MS_Description' ");
+            sbCmd.AppendLine("\t   WHERE ST.name = @TABLE_NAME) AS Identity_Description  ");
+            sbCmd.AppendLine("\t   ON Identity_Description.[Column] = IC.COLUMN_NAME ");
 
-            sbCmd.AppendLine("       LEFT JOIN ");
-            sbCmd.AppendLine("       (SELECT ICC.TABLE_NAME,");
-            sbCmd.AppendLine("       ICC.COLUMN_NAME ");
-            sbCmd.AppendLine("       FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS ITC ");
-            sbCmd.AppendLine("       JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE AS ICC ");
-            sbCmd.AppendLine("       ON ITC.CONSTRAINT_NAME = ICC.CONSTRAINT_NAME ");
-            sbCmd.AppendLine("       WHERE ITC.CONSTRAINT_TYPE = 'PRIMARY KEY'  ");
-            sbCmd.AppendLine("             AND ICC.TABLE_NAME = @TABLE_NAME) AS PK");
-            sbCmd.AppendLine("       ON PK.[COLUMN_NAME] = Identity_Description.[Column] ");
+            sbCmd.AppendLine("\t   LEFT JOIN ");
+            sbCmd.AppendLine("\t   (SELECT ICC.TABLE_NAME,");
+            sbCmd.AppendLine("\t   ICC.COLUMN_NAME ");
+            sbCmd.AppendLine("\t   FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS ITC ");
+            sbCmd.AppendLine("\t   JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE AS ICC ");
+            sbCmd.AppendLine("\t   ON ITC.CONSTRAINT_NAME = ICC.CONSTRAINT_NAME ");
+            sbCmd.AppendLine("\t   WHERE ITC.CONSTRAINT_TYPE = 'PRIMARY KEY'  ");
+            sbCmd.AppendLine("\t\t\t AND ICC.TABLE_NAME = @TABLE_NAME) AS PK");
+            sbCmd.AppendLine("\t   ON PK.[COLUMN_NAME] = Identity_Description.[Column] ");
 
             sbCmd.AppendLine("WHERE (1=1) ");
             sbCmd.AppendLine("	     AND IC.TABLE_NAME = @TABLE_NAME 		");
@@ -472,70 +472,70 @@ namespace TestForm
                 infoScript.AppendLine("");
                 infoScript.AppendLine("namespace " + tbNameSpace.Text);
                 infoScript.AppendLine("{");
-                infoScript.AppendLine("    public partial class " + tableName + "Info : baseDB");
-                infoScript.AppendLine("    {");
-                infoScript.AppendLine("        ");
-                infoScript.AppendLine("        /// <summary>");
-                infoScript.AppendLine("        /// Constructors");
-                infoScript.AppendLine("        /// </summary>		");
-                infoScript.AppendLine("        public " + tableName + "Info()");
-                infoScript.AppendLine("        {");
-                infoScript.AppendLine("            base.DBInstanceName = \"" + drvConnID + "\"; //SEC Connection ID");
-                infoScript.AppendLine("            this.Init();");
-                infoScript.AppendLine("        }");
+                infoScript.AppendLine("\tpublic partial class " + tableName + "Info : baseDB");
+                infoScript.AppendLine("\t{");
+                infoScript.AppendLine("\t\t");
+                infoScript.AppendLine("\t\t/// <summary>");
+                infoScript.AppendLine("\t\t/// Constructors");
+                infoScript.AppendLine("\t\t/// </summary>		");
+                infoScript.AppendLine("\t\tpublic " + tableName + "Info()");
+                infoScript.AppendLine("\t\t{");
+                infoScript.AppendLine("\t\t\tbase.DBInstanceName = \"" + drvConnID + "\"; //SEC Connection ID");
+                infoScript.AppendLine("\t\t\tthis.Init();");
+                infoScript.AppendLine("\t\t}");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        #region Init");
-                infoScript.AppendLine("        private void Init()");
-                infoScript.AppendLine("        {");
+                infoScript.AppendLine("\t\t#region Init");
+                infoScript.AppendLine("\t\tprivate void Init()");
+                infoScript.AppendLine("\t\t{");
 
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     string[] wording = generateWording(dr).Split('@');
-                    infoScript.AppendLine("        	this._" + String.Format("{0,-60}", dr["ColumnName"].ToString() + wording[0].ToString() + ";") + "//" + dr["Description"].ToString().Replace("\r\n", "\t"));
+                    infoScript.AppendLine("\t\t	this._" + String.Format("{0,-60}", dr["ColumnName"].ToString() + wording[0].ToString() + ";") + "//" + dr["Description"].ToString().Replace("\r\n", "\t"));
                 }
 
-                infoScript.AppendLine("        }");
-                infoScript.AppendLine("        #endregion");
-                infoScript.AppendLine("        ");
-                infoScript.AppendLine("        ");
-                infoScript.AppendLine("        #region Private Properties");
+                infoScript.AppendLine("\t\t}");
+                infoScript.AppendLine("\t\t#endregion");
+                infoScript.AppendLine("\t\t");
+                infoScript.AppendLine("\t\t");
+                infoScript.AppendLine("\t\t#region Private Properties");
 
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     string[] wording = generateWording(dr).Split('@');
-                    infoScript.AppendLine("        	private " + wording[1].ToString() + " _" + dr["ColumnName"].ToString() + ";");
+                    infoScript.AppendLine("\t\t	private " + wording[1].ToString() + " _" + dr["ColumnName"].ToString() + ";");
                 }
 
-                infoScript.AppendLine("        #endregion");
-                infoScript.AppendLine("        ");
-                infoScript.AppendLine("        ");
-                infoScript.AppendLine("        #region Public Properties");
-                infoScript.AppendLine("        ");
+                infoScript.AppendLine("\t\t#endregion");
+                infoScript.AppendLine("\t\t");
+                infoScript.AppendLine("\t\t");
+                infoScript.AppendLine("\t\t#region Public Properties");
+                infoScript.AppendLine("\t\t");
 
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     string[] wording = generateWording(dr).Split('@');
-                    infoScript.AppendLine("        /// <summary>");
-                    infoScript.AppendLine("        /// " + dr["Description"].ToString().Replace("\r\n", "\t"));
-                    infoScript.AppendLine("        /// </summary>");
-                    infoScript.AppendLine("        public " + wording[1] + " " + dr["ColumnName"].ToString());
-                    infoScript.AppendLine("        {");
-                    infoScript.AppendLine("        	get { return _" + dr["ColumnName"].ToString() + "; }");
-                    infoScript.AppendLine("        	set { _" + dr["ColumnName"].ToString() + " = value; }");
-                    infoScript.AppendLine("        }");
+                    infoScript.AppendLine("\t\t/// <summary>");
+                    infoScript.AppendLine("\t\t/// " + dr["Description"].ToString().Replace("\r\n", "\t"));
+                    infoScript.AppendLine("\t\t/// </summary>");
+                    infoScript.AppendLine("\t\tpublic " + wording[1] + " " + dr["ColumnName"].ToString());
+                    infoScript.AppendLine("\t\t{");
+                    infoScript.AppendLine("\t\t	get { return _" + dr["ColumnName"].ToString() + "; }");
+                    infoScript.AppendLine("\t\t	set { _" + dr["ColumnName"].ToString() + " = value; }");
+                    infoScript.AppendLine("\t\t}");
                 }
-                infoScript.AppendLine("        #endregion");
-                infoScript.AppendLine("        ");
+                infoScript.AppendLine("\t\t#endregion");
+                infoScript.AppendLine("\t\t");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        #region Methods");
+                infoScript.AppendLine("\t\t#region Methods");
                 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        /// <summary>");
-                infoScript.AppendLine("        /// 依據PK載入一筆資料");
-                infoScript.AppendLine("        /// </summary>");
-                infoScript.AppendLine("        /// <returns>true代表成功載入，false代表找不到任何資料</returns>");
-                infoScript.Append("        public bool Load(");
+                infoScript.AppendLine("\t\t/// <summary>");
+                infoScript.AppendLine("\t\t/// 依據PK載入一筆資料");
+                infoScript.AppendLine("\t\t/// </summary>");
+                infoScript.AppendLine("\t\t/// <returns>true代表成功載入，false代表找不到任何資料</returns>");
+                infoScript.Append("\t\tpublic bool Load(");
 
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
@@ -554,190 +554,190 @@ namespace TestForm
                 }
 
                 infoScript.AppendLine(")");
-                infoScript.AppendLine("        {");
-                infoScript.AppendLine("            bool Result = false;");
+                infoScript.AppendLine("\t\t{");
+                infoScript.AppendLine("\t\t\tbool Result = false;");
                 infoScript.AppendLine("");
                 foreach (string pkColumn in pkColumns)
                 {
-                    infoScript.AppendLine("            this._" + pkColumn + " = i" + pkColumn + ";");
+                    infoScript.AppendLine("\t\t\tthis._" + pkColumn + " = i" + pkColumn + ";");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            Database db = base.GetDatabase();");
-                infoScript.AppendLine("            StringBuilder sbCmd = new StringBuilder();");
+                infoScript.AppendLine("\t\t\tDatabase db = base.GetDatabase();");
+                infoScript.AppendLine("\t\t\tStringBuilder sbCmd = new StringBuilder();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            sbCmd.Append(\"   SELECT * FROM [" + tableName + "] WITH (Nolock) \");");
-                infoScript.AppendLine("            sbCmd.Append(\"   WHERE(1 = 1) \");");
+                infoScript.AppendLine("\t\t\tsbCmd.Append(\"   SELECT * FROM [" + tableName + "] WITH (Nolock) \");");
+                infoScript.AppendLine("\t\t\tsbCmd.Append(\"   WHERE(1 = 1) \");");
                 foreach (string pkColumn in pkColumns)
                 {
-                    infoScript.AppendLine("            sbCmd.Append(\"       AND " + pkColumn + " = @" + pkColumn + "      \");");
+                    infoScript.AppendLine("\t\t\tsbCmd.Append(\"\t   AND " + pkColumn + " = @" + pkColumn + "\t  \");");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            DbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
+                infoScript.AppendLine("\t\t\tDbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            #region Add In Parameter");
+                infoScript.AppendLine("\t\t\t#region Add In Parameter");
                 infoScript.AppendLine("");
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     string[] wording = generateWording(dr).Split('@');
                     if (dr["isPK"].ToString() == "Y")
-                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
+                        infoScript.AppendLine("\t\t\tdb.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            #endregion");
+                infoScript.AppendLine("\t\t\t#endregion");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            try");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                DataTable dtTemp = db.ExecuteDataSet(dbCommand).Tables[0];");
-                infoScript.AppendLine("                if (dtTemp.Rows.Count == 0)");
-                infoScript.AppendLine("                {");
-                infoScript.AppendLine("                    base.EditMode = EditType.Insert;");
-                infoScript.AppendLine("                    Result = false;");
-                infoScript.AppendLine("                }");
-                infoScript.AppendLine("                else");
-                infoScript.AppendLine("                {");
-                infoScript.AppendLine("                    base.EditMode = EditType.Update;");
-                infoScript.AppendLine("                    Result = true;");
+                infoScript.AppendLine("\t\t\ttry");
+                infoScript.AppendLine("\t\t\t{");
+                infoScript.AppendLine("\t\t\t\tDataTable dtTemp = db.ExecuteDataSet(dbCommand).Tables[0];");
+                infoScript.AppendLine("\t\t\t\tif (dtTemp.Rows.Count == 0)");
+                infoScript.AppendLine("\t\t\t\t{");
+                infoScript.AppendLine("\t\t\t\t    base.EditMode = EditType.Insert;");
+                infoScript.AppendLine("\t\t\t\t    Result = false;");
+                infoScript.AppendLine("\t\t\t\t}");
+                infoScript.AppendLine("\t\t\t\telse");
+                infoScript.AppendLine("\t\t\t\t{");
+                infoScript.AppendLine("\t\t\t\t    base.EditMode = EditType.Update;");
+                infoScript.AppendLine("\t\t\t\t    Result = true;");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                    DataRow dr = dtTemp.Rows[0];");
+                infoScript.AppendLine("\t\t\t\t    DataRow dr = dtTemp.Rows[0];");
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     string[] wording = generateWording(dr).Split('@');
                     infoScript.AppendLine("\t\t\t\t\t" + wording[3]);
                 }
-                infoScript.AppendLine("                }");
+                infoScript.AppendLine("\t\t\t\t}");
                 if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
-                    infoScript.AppendLine("                base.IsSuccess = true;");
+                    infoScript.AppendLine("\t\t\t\tbase.IsSuccess = true;");
                 else
-                    infoScript.AppendLine("                base.ErrFlag = true;");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("            catch (Exception ex)");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                #region 呼叫Base.LogExpInf 進行Exception Log 記錄 (固定寫法)");
-                infoScript.AppendLine("                //取得目前MethodName");
-                infoScript.AppendLine("                System.Diagnostics.StackFrame stackFrame = new System.Diagnostics.StackFrame();");
-                infoScript.AppendLine("                System.Reflection.MethodBase myMethodBase = stackFrame.GetMethod();");
+                    infoScript.AppendLine("\t\t\t\tbase.ErrFlag = true;");
+                infoScript.AppendLine("\t\t\t}");
+                infoScript.AppendLine("\t\t\tcatch (Exception ex)");
+                infoScript.AppendLine("\t\t\t{");
+                infoScript.AppendLine("\t\t\t\t#region 呼叫Base.LogExpInf 進行Exception Log 記錄 (固定寫法)");
+                infoScript.AppendLine("\t\t\t\t//取得目前MethodName");
+                infoScript.AppendLine("\t\t\t\tSystem.Diagnostics.StackFrame stackFrame = new System.Diagnostics.StackFrame();");
+                infoScript.AppendLine("\t\t\t\tSystem.Reflection.MethodBase myMethodBase = stackFrame.GetMethod();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                Result = false;");
+                infoScript.AppendLine("\t\t\t\tResult = false;");
                 if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
-                    infoScript.AppendLine("                base.IsSuccess = false;");
+                    infoScript.AppendLine("\t\t\t\tbase.IsSuccess = false;");
                 else
-                    infoScript.AppendLine("                base.ErrFlag = false;");
-                infoScript.AppendLine("                base.ErrMsg = ex.ToString();");
-                infoScript.AppendLine("                base.ErrMethodName = myMethodBase.Name.ToString();");
+                    infoScript.AppendLine("\t\t\t\tbase.ErrFlag = false;");
+                infoScript.AppendLine("\t\t\t\tbase.ErrMsg = ex.ToString();");
+                infoScript.AppendLine("\t\t\t\tbase.ErrMethodName = myMethodBase.Name.ToString();");
                 if (checkedButtonWriteExplog.Name == "rbWriteExplogY")
                 {
-                    infoScript.AppendLine("                StringBuilder sbParameter = new StringBuilder();");
-                    infoScript.AppendLine("                foreach (DbParameter Value in dbCommand.Parameters)");
-                    infoScript.AppendLine("                {");
-                    infoScript.AppendLine("                    sbParameter.AppendLine(\"declare \" + Value.ParameterName + \" nvarchar(500) set \" + Value.ParameterName  + \" = '\" + Convert.ToString(Value.Value) + \"'\");");
-                    infoScript.AppendLine("                }");
-                    infoScript.AppendLine("                base.ErrDbCommand = sbParameter.ToString() + dbCommand.CommandText;");
+                    infoScript.AppendLine("\t\t\t\tStringBuilder sbParameter = new StringBuilder();");
+                    infoScript.AppendLine("\t\t\t\tforeach (DbParameter Value in dbCommand.Parameters)");
+                    infoScript.AppendLine("\t\t\t\t{");
+                    infoScript.AppendLine("\t\t\t\t    sbParameter.AppendLine(\"declare \" + Value.ParameterName + \" nvarchar(500) set \" + Value.ParameterName  + \" = '\" + Convert.ToString(Value.Value) + \"'\");");
+                    infoScript.AppendLine("\t\t\t\t}");
+                    infoScript.AppendLine("\t\t\t\tbase.ErrDbCommand = sbParameter.ToString() + dbCommand.CommandText;");
                 }
-                infoScript.AppendLine("                base.LogExpInf();");
-                infoScript.AppendLine("                #endregion");
+                infoScript.AppendLine("\t\t\t\tbase.LogExpInf();");
+                infoScript.AppendLine("\t\t\t\t#endregion");
                 infoScript.AppendLine("");
                 if (checkedButtonThrowException.Name == "rbThrowExceptionY")
-                    infoScript.AppendLine("                throw; //將原來的 exception 再次的抛出去");
-                infoScript.AppendLine("            }");
+                    infoScript.AppendLine("\t\t\t\tthrow; //將原來的 exception 再次的抛出去");
+                infoScript.AppendLine("\t\t\t}");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            return Result;");
-                infoScript.AppendLine("        }");
+                infoScript.AppendLine("\t\t\treturn Result;");
+                infoScript.AppendLine("\t\t}");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        /// <summary>");
-                infoScript.AppendLine("        /// Insert");
-                infoScript.AppendLine("        /// </summary>");
-                infoScript.AppendLine("        public void Insert()");
-                infoScript.AppendLine("        {");
-                infoScript.AppendLine("            Database db = base.GetDatabase();");
-                infoScript.AppendLine("            StringBuilder sbCmd = new StringBuilder();");
+                infoScript.AppendLine("\t\t/// <summary>");
+                infoScript.AppendLine("\t\t/// Insert");
+                infoScript.AppendLine("\t\t/// </summary>");
+                infoScript.AppendLine("\t\tpublic void Insert()");
+                infoScript.AppendLine("\t\t{");
+                infoScript.AppendLine("\t\t\tDatabase db = base.GetDatabase();");
+                infoScript.AppendLine("\t\t\tStringBuilder sbCmd = new StringBuilder();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            sbCmd.Append(\"	INSERT INTO [" + tableName + "]		\");");
-                infoScript.AppendLine("            sbCmd.Append(\"		(				\");");
+                infoScript.AppendLine("\t\t\tsbCmd.Append(\"	INSERT INTO [" + tableName + "]		\");");
+                infoScript.AppendLine("\t\t\tsbCmd.Append(\"		(				\");");
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     if (ColumnsTable.Rows.IndexOf(dr) == 0)
-                        infoScript.AppendLine("            sbCmd.Append(\"		" + dr["ColumnName"].ToString() + "		\");");
+                        infoScript.AppendLine("\t\t\tsbCmd.Append(\"		" + dr["ColumnName"].ToString() + "		\");");
                     else
-                        infoScript.AppendLine("            sbCmd.Append(\"		," + dr["ColumnName"].ToString() + "		\");");
+                        infoScript.AppendLine("\t\t\tsbCmd.Append(\"		," + dr["ColumnName"].ToString() + "		\");");
                 }
-                infoScript.AppendLine("            sbCmd.Append(\"		)				\");");
-                infoScript.AppendLine("            sbCmd.Append(\"	VALUES		\");");
-                infoScript.AppendLine("            sbCmd.Append(\"		(				\");");
+                infoScript.AppendLine("\t\t\tsbCmd.Append(\"		)				\");");
+                infoScript.AppendLine("\t\t\tsbCmd.Append(\"	VALUES		\");");
+                infoScript.AppendLine("\t\t\tsbCmd.Append(\"		(				\");");
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     if (ColumnsTable.Rows.IndexOf(dr) == 0)
-                        infoScript.AppendLine("            sbCmd.Append(\"		@" + dr["ColumnName"].ToString() + "		\");");
+                        infoScript.AppendLine("\t\t\tsbCmd.Append(\"		@" + dr["ColumnName"].ToString() + "		\");");
                     else
-                        infoScript.AppendLine("            sbCmd.Append(\"		,@" + dr["ColumnName"].ToString() + "		\");");
+                        infoScript.AppendLine("\t\t\tsbCmd.Append(\"		,@" + dr["ColumnName"].ToString() + "		\");");
                 }
-                infoScript.AppendLine("            sbCmd.Append(\"		)				\");");
+                infoScript.AppendLine("\t\t\tsbCmd.Append(\"		)				\");");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            DbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
+                infoScript.AppendLine("\t\t\tDbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            #region Add In Parameter");
+                infoScript.AppendLine("\t\t\t#region Add In Parameter");
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     string[] wording = generateWording(dr).Split('@');
                     if (wording[1] == "XmlDocument")
                     {
-                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType.Xml, this._" + dr["ColumnName"].ToString() + ".OuterXml);");
+                        infoScript.AppendLine("\t\t\tdb.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType.Xml, this._" + dr["ColumnName"].ToString() + ".OuterXml);");
                     }
                     else
                     {
-                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
+                        infoScript.AppendLine("\t\t\tdb.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
                     }
                 }
-                infoScript.AppendLine("            #endregion");
+                infoScript.AppendLine("\t\t\t#endregion");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            try");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                db.ExecuteNonQuery(dbCommand);");
+                infoScript.AppendLine("\t\t\ttry");
+                infoScript.AppendLine("\t\t\t{");
+                infoScript.AppendLine("\t\t\t\tdb.ExecuteNonQuery(dbCommand);");
                 if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
-                    infoScript.AppendLine("                base.IsSuccess = true;");
+                    infoScript.AppendLine("\t\t\t\tbase.IsSuccess = true;");
                 else
-                    infoScript.AppendLine("                base.ErrFlag = false;");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("            catch (Exception ex)");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                #region 呼叫Base.LogExpInf 進行Exception Log 記錄 (固定寫法)");
-                infoScript.AppendLine("                //取得目前MethodName");
-                infoScript.AppendLine("                System.Diagnostics.StackFrame stackFrame = new System.Diagnostics.StackFrame();");
-                infoScript.AppendLine("                System.Reflection.MethodBase myMethodBase = stackFrame.GetMethod();");
+                    infoScript.AppendLine("\t\t\t\tbase.ErrFlag = false;");
+                infoScript.AppendLine("\t\t\t}");
+                infoScript.AppendLine("\t\t\tcatch (Exception ex)");
+                infoScript.AppendLine("\t\t\t{");
+                infoScript.AppendLine("\t\t\t\t#region 呼叫Base.LogExpInf 進行Exception Log 記錄 (固定寫法)");
+                infoScript.AppendLine("\t\t\t\t//取得目前MethodName");
+                infoScript.AppendLine("\t\t\t\tSystem.Diagnostics.StackFrame stackFrame = new System.Diagnostics.StackFrame();");
+                infoScript.AppendLine("\t\t\t\tSystem.Reflection.MethodBase myMethodBase = stackFrame.GetMethod();");
                 infoScript.AppendLine("");
                 if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
-                    infoScript.AppendLine("                base.IsSuccess = false;");
+                    infoScript.AppendLine("\t\t\t\tbase.IsSuccess = false;");
                 else
-                    infoScript.AppendLine("                base.ErrFlag = false;");
-                infoScript.AppendLine("                base.ErrMsg = ex.ToString();");
-                infoScript.AppendLine("                base.ErrMethodName = myMethodBase.Name.ToString();");
+                    infoScript.AppendLine("\t\t\t\tbase.ErrFlag = false;");
+                infoScript.AppendLine("\t\t\t\tbase.ErrMsg = ex.ToString();");
+                infoScript.AppendLine("\t\t\t\tbase.ErrMethodName = myMethodBase.Name.ToString();");
                 if (checkedButtonWriteExplog.Name == "rbWriteExplogY")
                 {
-                    infoScript.AppendLine("                StringBuilder sbParameter = new StringBuilder();");
-                    infoScript.AppendLine("                foreach (DbParameter Value in dbCommand.Parameters)");
-                    infoScript.AppendLine("                {");
-                    infoScript.AppendLine("                    sbParameter.AppendLine(\"declare \" + Value.ParameterName + \" nvarchar(500) set \" + Value.ParameterName  + \" = '\" + Convert.ToString(Value.Value) + \"'\");");
-                    infoScript.AppendLine("                }");
-                    infoScript.AppendLine("                base.ErrDbCommand = sbParameter.ToString() + dbCommand.CommandText;");
+                    infoScript.AppendLine("\t\t\t\tStringBuilder sbParameter = new StringBuilder();");
+                    infoScript.AppendLine("\t\t\t\tforeach (DbParameter Value in dbCommand.Parameters)");
+                    infoScript.AppendLine("\t\t\t\t{");
+                    infoScript.AppendLine("\t\t\t\t    sbParameter.AppendLine(\"declare \" + Value.ParameterName + \" nvarchar(500) set \" + Value.ParameterName  + \" = '\" + Convert.ToString(Value.Value) + \"'\");");
+                    infoScript.AppendLine("\t\t\t\t}");
+                    infoScript.AppendLine("\t\t\t\tbase.ErrDbCommand = sbParameter.ToString() + dbCommand.CommandText;");
                 }
-                infoScript.AppendLine("                base.LogExpInf();");
-                infoScript.AppendLine("                #endregion");
+                infoScript.AppendLine("\t\t\t\tbase.LogExpInf();");
+                infoScript.AppendLine("\t\t\t\t#endregion");
                 infoScript.AppendLine("");
                 if (checkedButtonThrowException.Name == "rbThrowExceptionY")
-                    infoScript.AppendLine("                throw; //將原來的 exception 再次的抛出去");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("        }");
+                    infoScript.AppendLine("\t\t\t\tthrow; //將原來的 exception 再次的抛出去");
+                infoScript.AppendLine("\t\t\t}");
+                infoScript.AppendLine("\t\t}");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        /// <summary>");
-                infoScript.AppendLine("        /// Update");
-                infoScript.AppendLine("        /// </summary>");
-                infoScript.AppendLine("        public void Update()");
-                infoScript.AppendLine("        {");
-                infoScript.AppendLine("            Database db = base.GetDatabase();");
-                infoScript.AppendLine("            StringBuilder sbCmd = new StringBuilder();");
+                infoScript.AppendLine("\t\t/// <summary>");
+                infoScript.AppendLine("\t\t/// Update");
+                infoScript.AppendLine("\t\t/// </summary>");
+                infoScript.AppendLine("\t\tpublic void Update()");
+                infoScript.AppendLine("\t\t{");
+                infoScript.AppendLine("\t\t\tDatabase db = base.GetDatabase();");
+                infoScript.AppendLine("\t\t\tStringBuilder sbCmd = new StringBuilder();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            sbCmd.Append(\"	UPDATE [" + tableName + "] SET 		\");");
+                infoScript.AppendLine("\t\t\tsbCmd.Append(\"	UPDATE [" + tableName + "] SET 		\");");
                 DataTable dt = new DataTable();
                 dt = ColumnsTable.Copy();
                 foreach (DataRow dr in dt.Rows)
@@ -752,76 +752,76 @@ namespace TestForm
                 {
                     string[] wording = generateWording(dr).Split('@');
                     if (dt.Rows.IndexOf(dr) == 0)
-                        infoScript.AppendLine("            sbCmd.Append(\"		" + dr["ColumnName"].ToString() + " = @" + dr["ColumnName"].ToString() + " 		\");");
+                        infoScript.AppendLine("\t\t\tsbCmd.Append(\"		" + dr["ColumnName"].ToString() + " = @" + dr["ColumnName"].ToString() + " 		\");");
                     else
-                        infoScript.AppendLine("            sbCmd.Append(\"		," + dr["ColumnName"].ToString() + " = @" + dr["ColumnName"].ToString() + " 		\");");
+                        infoScript.AppendLine("\t\t\tsbCmd.Append(\"		," + dr["ColumnName"].ToString() + " = @" + dr["ColumnName"].ToString() + " 		\");");
                 }
-                infoScript.AppendLine("            sbCmd.Append(\"	WHERE (1=1) \");");
+                infoScript.AppendLine("\t\t\tsbCmd.Append(\"	WHERE (1=1) \");");
                 foreach (string ColumnName in pkColumns)
                 {
-                    infoScript.AppendLine("            sbCmd.Append(\"		AND " + ColumnName + " = @" + ColumnName + " 		\");");
+                    infoScript.AppendLine("\t\t\tsbCmd.Append(\"		AND " + ColumnName + " = @" + ColumnName + " 		\");");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            DbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
+                infoScript.AppendLine("\t\t\tDbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            #region Add In Parameter");
+                infoScript.AppendLine("\t\t\t#region Add In Parameter");
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     string[] wording = generateWording(dr).Split('@');
                     if (wording[1] == "XmlDocument")
                     {
-                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType.Xml, this._" + dr["ColumnName"].ToString() + ".OuterXml);");
+                        infoScript.AppendLine("\t\t\tdb.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType.Xml, this._" + dr["ColumnName"].ToString() + ".OuterXml);");
                     }
                     else
                     {
-                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
+                        infoScript.AppendLine("\t\t\tdb.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
                     }
                 }
-                infoScript.AppendLine("            #endregion");
+                infoScript.AppendLine("\t\t\t#endregion");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            try");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                db.ExecuteNonQuery(dbCommand);");
+                infoScript.AppendLine("\t\t\ttry");
+                infoScript.AppendLine("\t\t\t{");
+                infoScript.AppendLine("\t\t\t\tdb.ExecuteNonQuery(dbCommand);");
                 if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
-                    infoScript.AppendLine("                base.IsSuccess = true;");
+                    infoScript.AppendLine("\t\t\t\tbase.IsSuccess = true;");
                 else
-                    infoScript.AppendLine("                base.ErrFlag = false;");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("            catch (Exception ex)");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                #region 呼叫Base.LogExpInf 進行Exception Log 記錄 (固定寫法)");
-                infoScript.AppendLine("                //取得目前MethodName");
-                infoScript.AppendLine("                System.Diagnostics.StackFrame stackFrame = new System.Diagnostics.StackFrame();");
-                infoScript.AppendLine("                System.Reflection.MethodBase myMethodBase = stackFrame.GetMethod();");
+                    infoScript.AppendLine("\t\t\t\tbase.ErrFlag = false;");
+                infoScript.AppendLine("\t\t\t}");
+                infoScript.AppendLine("\t\t\tcatch (Exception ex)");
+                infoScript.AppendLine("\t\t\t{");
+                infoScript.AppendLine("\t\t\t\t#region 呼叫Base.LogExpInf 進行Exception Log 記錄 (固定寫法)");
+                infoScript.AppendLine("\t\t\t\t//取得目前MethodName");
+                infoScript.AppendLine("\t\t\t\tSystem.Diagnostics.StackFrame stackFrame = new System.Diagnostics.StackFrame();");
+                infoScript.AppendLine("\t\t\t\tSystem.Reflection.MethodBase myMethodBase = stackFrame.GetMethod();");
                 infoScript.AppendLine("");
                 if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
-                    infoScript.AppendLine("                base.IsSuccess = false;");
+                    infoScript.AppendLine("\t\t\t\tbase.IsSuccess = false;");
                 else
-                    infoScript.AppendLine("                base.ErrFlag = false;");
-                infoScript.AppendLine("                base.ErrMsg = ex.ToString();");
-                infoScript.AppendLine("                base.ErrMethodName = myMethodBase.Name.ToString();");
+                    infoScript.AppendLine("\t\t\t\tbase.ErrFlag = false;");
+                infoScript.AppendLine("\t\t\t\tbase.ErrMsg = ex.ToString();");
+                infoScript.AppendLine("\t\t\t\tbase.ErrMethodName = myMethodBase.Name.ToString();");
                 if (checkedButtonWriteExplog.Name == "rbWriteExplogY")
                 {
-                    infoScript.AppendLine("                StringBuilder sbParameter = new StringBuilder();");
-                    infoScript.AppendLine("                foreach (DbParameter Value in dbCommand.Parameters)");
-                    infoScript.AppendLine("                {");
-                    infoScript.AppendLine("                    sbParameter.AppendLine(\"declare \" + Value.ParameterName + \" nvarchar(500) set \" + Value.ParameterName  + \" = '\" + Convert.ToString(Value.Value) + \"'\");");
-                    infoScript.AppendLine("                }");
-                    infoScript.AppendLine("                base.ErrDbCommand = sbParameter.ToString() + dbCommand.CommandText;");
+                    infoScript.AppendLine("\t\t\t\tStringBuilder sbParameter = new StringBuilder();");
+                    infoScript.AppendLine("\t\t\t\tforeach (DbParameter Value in dbCommand.Parameters)");
+                    infoScript.AppendLine("\t\t\t\t{");
+                    infoScript.AppendLine("\t\t\t\t    sbParameter.AppendLine(\"declare \" + Value.ParameterName + \" nvarchar(500) set \" + Value.ParameterName  + \" = '\" + Convert.ToString(Value.Value) + \"'\");");
+                    infoScript.AppendLine("\t\t\t\t}");
+                    infoScript.AppendLine("\t\t\t\tbase.ErrDbCommand = sbParameter.ToString() + dbCommand.CommandText;");
                 }
-                infoScript.AppendLine("                base.LogExpInf();");
-                infoScript.AppendLine("                #endregion");
+                infoScript.AppendLine("\t\t\t\tbase.LogExpInf();");
+                infoScript.AppendLine("\t\t\t\t#endregion");
                 infoScript.AppendLine("");
                 if (checkedButtonThrowException.Name == "rbThrowExceptionY")
-                    infoScript.AppendLine("                throw; //將原來的 exception 再次的抛出去");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("        }");
+                    infoScript.AppendLine("\t\t\t\tthrow; //將原來的 exception 再次的抛出去");
+                infoScript.AppendLine("\t\t\t}");
+                infoScript.AppendLine("\t\t}");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        /// <summary>");
-                infoScript.AppendLine("        /// Delete");
-                infoScript.AppendLine("        /// </summary>");
-                infoScript.Append("        public void Delete(");
+                infoScript.AppendLine("\t\t/// <summary>");
+                infoScript.AppendLine("\t\t/// Delete");
+                infoScript.AppendLine("\t\t/// </summary>");
+                infoScript.Append("\t\tpublic void Delete(");
 
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
@@ -840,96 +840,96 @@ namespace TestForm
                 }
 
                 infoScript.AppendLine(")");
-                infoScript.AppendLine("        {");
-                infoScript.AppendLine("            Database db = base.GetDatabase();");
-                infoScript.AppendLine("            StringBuilder sbCmd = new StringBuilder();");
+                infoScript.AppendLine("\t\t{");
+                infoScript.AppendLine("\t\t\tDatabase db = base.GetDatabase();");
+                infoScript.AppendLine("\t\t\tStringBuilder sbCmd = new StringBuilder();");
                 infoScript.AppendLine("");
 
                 foreach (string pkColumn in pkColumns)
                 {
-                    infoScript.AppendLine("            this._" + pkColumn + " = i" + pkColumn + ";");
+                    infoScript.AppendLine("\t\t\tthis._" + pkColumn + " = i" + pkColumn + ";");
                 }
 
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            sbCmd.Append(\"	DELETE [" + tableName + "]		\");");
-                infoScript.AppendLine("            sbCmd.Append(\"	WHERE (1=1) 		\");");
+                infoScript.AppendLine("\t\t\tsbCmd.Append(\"	DELETE [" + tableName + "]		\");");
+                infoScript.AppendLine("\t\t\tsbCmd.Append(\"	WHERE (1=1) 		\");");
                 foreach (string ColumnName in pkColumns)
                 {
-                    infoScript.AppendLine("            sbCmd.Append(\"		AND " + ColumnName + " = @" + ColumnName + " 		\");");
+                    infoScript.AppendLine("\t\t\tsbCmd.Append(\"		AND " + ColumnName + " = @" + ColumnName + " 		\");");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            DbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
+                infoScript.AppendLine("\t\t\tDbCommand dbCommand = db.GetSqlStringCommand(sbCmd.ToString());");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            #region Add In Parameter");
+                infoScript.AppendLine("\t\t\t#region Add In Parameter");
                 infoScript.AppendLine("");
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     string[] wording = generateWording(dr).Split('@');
                     if (dr["isPK"].ToString() == "Y")
-                        infoScript.AppendLine("            db.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
+                        infoScript.AppendLine("\t\t\tdb.AddInParameter(dbCommand, \"@" + dr["ColumnName"].ToString() + "\", DbType." + wording[2] + ", this._" + dr["ColumnName"].ToString() + ");");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            #endregion");
+                infoScript.AppendLine("\t\t\t#endregion");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            try");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                db.ExecuteNonQuery(dbCommand);");
+                infoScript.AppendLine("\t\t\ttry");
+                infoScript.AppendLine("\t\t\t{");
+                infoScript.AppendLine("\t\t\t\tdb.ExecuteNonQuery(dbCommand);");
                 if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
-                    infoScript.AppendLine("                base.IsSuccess = true;");
+                    infoScript.AppendLine("\t\t\t\tbase.IsSuccess = true;");
                 else
-                    infoScript.AppendLine("                base.ErrFlag = false;");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("            catch (Exception ex)");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                #region 呼叫Base.LogExpInf 進行Exception Log 記錄 (固定寫法)");
-                infoScript.AppendLine("                //取得目前MethodName");
-                infoScript.AppendLine("                System.Diagnostics.StackFrame stackFrame = new System.Diagnostics.StackFrame();");
-                infoScript.AppendLine("                System.Reflection.MethodBase myMethodBase = stackFrame.GetMethod();");
+                    infoScript.AppendLine("\t\t\t\tbase.ErrFlag = false;");
+                infoScript.AppendLine("\t\t\t}");
+                infoScript.AppendLine("\t\t\tcatch (Exception ex)");
+                infoScript.AppendLine("\t\t\t{");
+                infoScript.AppendLine("\t\t\t\t#region 呼叫Base.LogExpInf 進行Exception Log 記錄 (固定寫法)");
+                infoScript.AppendLine("\t\t\t\t//取得目前MethodName");
+                infoScript.AppendLine("\t\t\t\tSystem.Diagnostics.StackFrame stackFrame = new System.Diagnostics.StackFrame();");
+                infoScript.AppendLine("\t\t\t\tSystem.Reflection.MethodBase myMethodBase = stackFrame.GetMethod();");
                 infoScript.AppendLine("");
                 if (checkedButtonIsSuccess.Name == "rbIsSuccessY")
-                    infoScript.AppendLine("                base.IsSuccess = false;");
+                    infoScript.AppendLine("\t\t\t\tbase.IsSuccess = false;");
                 else
-                    infoScript.AppendLine("                base.ErrFlag = false;");
-                infoScript.AppendLine("                base.ErrMsg = ex.ToString();");
-                infoScript.AppendLine("                base.ErrMethodName = myMethodBase.Name.ToString();");
+                    infoScript.AppendLine("\t\t\t\tbase.ErrFlag = false;");
+                infoScript.AppendLine("\t\t\t\tbase.ErrMsg = ex.ToString();");
+                infoScript.AppendLine("\t\t\t\tbase.ErrMethodName = myMethodBase.Name.ToString();");
                 if (checkedButtonWriteExplog.Name == "rbWriteExplogY")
                 {
-                    infoScript.AppendLine("                StringBuilder sbParameter = new StringBuilder();");
-                    infoScript.AppendLine("                foreach (DbParameter Value in dbCommand.Parameters)");
-                    infoScript.AppendLine("                {");
-                    infoScript.AppendLine("                    sbParameter.AppendLine(\"declare \" + Value.ParameterName + \" nvarchar(500) set \" + Value.ParameterName  + \" = '\" + Convert.ToString(Value.Value) + \"'\");");
-                    infoScript.AppendLine("                }");
-                    infoScript.AppendLine("                base.ErrDbCommand = sbParameter.ToString() + dbCommand.CommandText;");
+                    infoScript.AppendLine("\t\t\t\tStringBuilder sbParameter = new StringBuilder();");
+                    infoScript.AppendLine("\t\t\t\tforeach (DbParameter Value in dbCommand.Parameters)");
+                    infoScript.AppendLine("\t\t\t\t{");
+                    infoScript.AppendLine("\t\t\t\t    sbParameter.AppendLine(\"declare \" + Value.ParameterName + \" nvarchar(500) set \" + Value.ParameterName  + \" = '\" + Convert.ToString(Value.Value) + \"'\");");
+                    infoScript.AppendLine("\t\t\t\t}");
+                    infoScript.AppendLine("\t\t\t\tbase.ErrDbCommand = sbParameter.ToString() + dbCommand.CommandText;");
                 }
-                infoScript.AppendLine("                base.LogExpInf();");
-                infoScript.AppendLine("                #endregion");
+                infoScript.AppendLine("\t\t\t\tbase.LogExpInf();");
+                infoScript.AppendLine("\t\t\t\t#endregion");
                 infoScript.AppendLine("");
                 if (checkedButtonThrowException.Name == "rbThrowExceptionY")
-                    infoScript.AppendLine("                throw; //將原來的 exception 再次的抛出去");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("        }");
+                    infoScript.AppendLine("\t\t\t\tthrow; //將原來的 exception 再次的抛出去");
+                infoScript.AppendLine("\t\t\t}");
+                infoScript.AppendLine("\t\t}");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("");
                 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 infoScript.AppendLine("");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        /// <summary>");
-                infoScript.AppendLine("        /// Save用法： 1. Info.Load() 2. Set Value 3. Info.Save()");
-                infoScript.AppendLine("        /// </summary>	");
-                infoScript.AppendLine("        public void Save()");
-                infoScript.AppendLine("        {");
-                infoScript.AppendLine("            if (base.EditMode == EditType.Insert)");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                this.Insert();");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("            else");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                this.Update();");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("        }");
+                infoScript.AppendLine("\t\t/// <summary>");
+                infoScript.AppendLine("\t\t/// Save用法： 1. Info.Load() 2. Set Value 3. Info.Save()");
+                infoScript.AppendLine("\t\t/// </summary>	");
+                infoScript.AppendLine("\t\tpublic void Save()");
+                infoScript.AppendLine("\t\t{");
+                infoScript.AppendLine("\t\t\tif (base.EditMode == EditType.Insert)");
+                infoScript.AppendLine("\t\t\t{");
+                infoScript.AppendLine("\t\t\t\tthis.Insert();");
+                infoScript.AppendLine("\t\t\t}");
+                infoScript.AppendLine("\t\t\telse");
+                infoScript.AppendLine("\t\t\t{");
+                infoScript.AppendLine("\t\t\t\tthis.Update();");
+                infoScript.AppendLine("\t\t\t}");
+                infoScript.AppendLine("\t\t}");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        #endregion");
-                infoScript.AppendLine("    }");
+                infoScript.AppendLine("\t\t#endregion");
+                infoScript.AppendLine("\t}");
                 infoScript.AppendLine("}");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("");
@@ -966,71 +966,70 @@ namespace TestForm
                 infoScript.AppendLine("");
                 infoScript.AppendLine("namespace " + tbNameSpace.Text);
                 infoScript.AppendLine("{");
-                infoScript.AppendLine("    public partial class " + tableName + "Info");
-                infoScript.AppendLine("    {");
-                infoScript.AppendLine("        ");
-                infoScript.AppendLine("        /// <summary>");
-                infoScript.AppendLine("        /// Constructors");
-                infoScript.AppendLine("        /// </summary>		");
-                infoScript.AppendLine("        public " + tableName + "Info(string connString)");
-                infoScript.AppendLine("        {");
-                infoScript.AppendLine("            this.Init();");
-                infoScript.AppendLine("            _ConnectionString = connString;");
-                infoScript.AppendLine("        }");
+                infoScript.AppendLine("\tpublic partial class " + tableName + "Info");
+                infoScript.AppendLine("\t{");
+                infoScript.AppendLine("\t\t/// <summary>");
+                infoScript.AppendLine("\t\t/// Constructors");
+                infoScript.AppendLine("\t\t/// </summary>		");
+                infoScript.AppendLine("\t\tpublic " + tableName + "Info(string connString)");
+                infoScript.AppendLine("\t\t{");
+                infoScript.AppendLine("\t\t\tthis.Init();");
+                infoScript.AppendLine("\t\t\t_ConnectionString = connString;");
+                infoScript.AppendLine("\t\t}");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        #region Init");
-                infoScript.AppendLine("        private void Init()");
-                infoScript.AppendLine("        {");
+                infoScript.AppendLine("\t\t#region Init");
+                infoScript.AppendLine("\t\tprivate void Init()");
+                infoScript.AppendLine("\t\t{");
 
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     string[] wording = generateWording(dr).Split('@');
-                    infoScript.AppendLine("        	this._" + String.Format("{0,-60}", dr["ColumnName"].ToString() + wording[0].ToString() + ";") + "//" + dr["Description"].ToString().Replace("\r\n", "\t"));
+                    infoScript.AppendLine("\t\t	this._" + String.Format("{0,-60}", dr["ColumnName"].ToString() + wording[0].ToString() + ";") + "//" + dr["Description"].ToString().Replace("\r\n", "\t"));
                 }
 
-                infoScript.AppendLine("        }");
-                infoScript.AppendLine("        #endregion");
-                infoScript.AppendLine("        ");
-                infoScript.AppendLine("        ");
-                infoScript.AppendLine("        #region Private Properties");
-                infoScript.AppendLine("        private string _ConnectionString;");
+                infoScript.AppendLine("\t\t}");
+                infoScript.AppendLine("\t\t#endregion");
+                infoScript.AppendLine("\t\t");
+                infoScript.AppendLine("\t\t");
+                infoScript.AppendLine("\t\t#region Private Properties");
+                infoScript.AppendLine("\t\tprivate string _ConnectionString;");
 
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     string[] wording = generateWording(dr).Split('@');
-                    infoScript.AppendLine("        	private " + wording[1].ToString() + " _" + dr["ColumnName"].ToString() + ";");
+                    infoScript.AppendLine("\t\tprivate " + wording[1].ToString() + " _" + dr["ColumnName"].ToString() + ";");
                 }
 
-                infoScript.AppendLine("        #endregion");
-                infoScript.AppendLine("        ");
-                infoScript.AppendLine("        ");
-                infoScript.AppendLine("        #region Public Properties");
-                infoScript.AppendLine("        ");
+                infoScript.AppendLine("\t\t#endregion");
+                infoScript.AppendLine("\t\t");
+                infoScript.AppendLine("\t\t");
+                infoScript.AppendLine("\t\t#region Public Properties");
+                infoScript.AppendLine("\t\t");
 
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     string[] wording = generateWording(dr).Split('@');
-                    infoScript.AppendLine("        /// <summary>");
-                    infoScript.AppendLine("        /// " + dr["Description"].ToString().Replace("\r\n", "\t"));
-                    infoScript.AppendLine("        /// </summary>");
-                    infoScript.AppendLine("        public " + wording[1] + " " + dr["ColumnName"].ToString());
-                    infoScript.AppendLine("        {");
-                    infoScript.AppendLine("        	get { return _" + dr["ColumnName"].ToString() + "; }");
-                    infoScript.AppendLine("        	set { _" + dr["ColumnName"].ToString() + " = value; }");
-                    infoScript.AppendLine("        }");
+                    infoScript.AppendLine("\t\t/// <summary>");
+                    infoScript.AppendLine("\t\t/// " + dr["Description"].ToString().Replace("\r\n", "\t"));
+                    infoScript.AppendLine("\t\t/// </summary>");
+                    infoScript.AppendLine("\t\tpublic " + wording[1] + " " + dr["ColumnName"].ToString());
+                    infoScript.AppendLine("\t\t{");
+                    infoScript.AppendLine("\t\t	get { return _" + dr["ColumnName"].ToString() + "; }");
+                    infoScript.AppendLine("\t\t	set { _" + dr["ColumnName"].ToString() + " = value; }");
+                    infoScript.AppendLine("\t\t}");
                 }
-                infoScript.AppendLine("        #endregion");
-                infoScript.AppendLine("        ");
+                infoScript.AppendLine("\t\t#endregion");
+                infoScript.AppendLine("\t\t");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        #region Methods");
+                infoScript.AppendLine("\t\t#region Methods");
                 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        /// <summary>");
-                infoScript.AppendLine("        /// 依據PK載入一筆資料");
-                infoScript.AppendLine("        /// </summary>");
-                infoScript.AppendLine("        /// <returns>true代表成功載入，false代表找不到任何資料</returns>");
-                infoScript.Append("        public bool Load(");
+                infoScript.AppendLine("\t\t/// <summary>");
+                infoScript.AppendLine("\t\t/// 依據PK載入一筆資料");
+                infoScript.AppendLine("\t\t/// </summary>");
+                infoScript.AppendLine("\t\t/// <returns>true代表成功載入，false代表找不到任何資料</returns>");
+                infoScript.Append("\t\tpublic bool Load(");
 
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
@@ -1049,178 +1048,183 @@ namespace TestForm
                 }
 
                 infoScript.AppendLine(")");
-                infoScript.AppendLine("        {");
-                infoScript.AppendLine("            bool Result = false;");
+                infoScript.AppendLine("\t\t{");
+                infoScript.AppendLine("\t\t\tbool Result = false;");
                 infoScript.AppendLine("");
                 foreach (string pkColumn in pkColumns)
                 {
-                    infoScript.AppendLine("            this._" + pkColumn + " = i" + pkColumn + ";");
+                    infoScript.AppendLine("\t\t\tthis._" + pkColumn + " = i" + pkColumn + ";");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            using (SqlCommand command = new SqlCommand())");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                SqlConnection connection = new SqlConnection(_ConnectionString);");
-                infoScript.AppendLine("                connection.Open();");
+                infoScript.AppendLine("\t\t\tusing (SqlCommand command = new SqlCommand())");
+                infoScript.AppendLine("\t\t\t{");
+                infoScript.AppendLine("\t\t\t\tSqlConnection connection = new SqlConnection(_ConnectionString);");
+                infoScript.AppendLine("\t\t\t\tconnection.Open();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                try");
-                infoScript.AppendLine("                {");
-                infoScript.AppendLine("                    StringBuilder sbCmd = new StringBuilder();");
+                infoScript.AppendLine("\t\t\t\ttry");
+                infoScript.AppendLine("\t\t\t\t{");
+                infoScript.AppendLine("\t\t\t\t\tStringBuilder sbCmd = new StringBuilder();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                    sbCmd.Append(\"   SELECT * FROM [" + tableName + "] WITH (Nolock) \");");
-                infoScript.AppendLine("                    sbCmd.Append(\"   WHERE(1 = 1) \");");
+                infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"   SELECT * FROM [" + tableName + "] WITH (Nolock) \");");
+                infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"   WHERE(1 = 1) \");");
                 foreach (string pkColumn in pkColumns)
                 {
-                    infoScript.AppendLine("                    sbCmd.Append(\"       AND " + pkColumn + " = @" + pkColumn + "      \");");
+                    infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"\t   AND " + pkColumn + " = @" + pkColumn + "\t  \");");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                command.Connection = connection;");
-                infoScript.AppendLine("                command.CommandText = sbCmd.ToString();");
+                infoScript.AppendLine("\t\t\t\t\tcommand.Connection = connection;");
+                infoScript.AppendLine("\t\t\t\t\tcommand.CommandText = sbCmd.ToString();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            #region Add In Parameter");
+                infoScript.AppendLine("\t\t\t\t\t#region Add In Parameter");
                 infoScript.AppendLine("");
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     string[] wording = generateWording(dr).Split('@');
                     if (dr["isPK"].ToString() == "Y")
-                        infoScript.AppendLine("                command.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType." + SqlDbTypeToUpper[dr["DataType"].ToString()] + ").Value = this._" + dr["ColumnName"].ToString() + ";");
+                        infoScript.AppendLine("\t\t\t\t\tcommand.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType." + SqlDbTypeToUpper[dr["DataType"].ToString()] + ").Value = this._" + dr["ColumnName"].ToString() + ";");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            #endregion");
+                infoScript.AppendLine("\t\t\t\t\t#endregion");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            IDataReader dataReader = command.ExecuteReader();");
-                infoScript.AppendLine("            DataTable dtTemp = new DataTable();");
-                infoScript.AppendLine("            dtTemp.Load(dataReader);");
+                infoScript.AppendLine("\t\t\t\t\tIDataReader dataReader = command.ExecuteReader();");
+                infoScript.AppendLine("\t\t\t\t\tDataTable dtTemp = new DataTable();");
+                infoScript.AppendLine("\t\t\t\t\tdtTemp.Load(dataReader);");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                if (dtTemp.Rows.Count == 0)");
-                infoScript.AppendLine("                {");
-                infoScript.AppendLine("                    Result = false;");
-                infoScript.AppendLine("                }");
-                infoScript.AppendLine("                else");
-                infoScript.AppendLine("                {");
-                infoScript.AppendLine("                    Result = true;");
+                infoScript.AppendLine("\t\t\t\t\tif (dtTemp.Rows.Count == 0)");
+                infoScript.AppendLine("\t\t\t\t\t{");
+                infoScript.AppendLine("\t\t\t\t\t\tResult = false;");
+                infoScript.AppendLine("\t\t\t\t\t}");
+                infoScript.AppendLine("\t\t\t\t\telse");
+                infoScript.AppendLine("\t\t\t\t\t{");
+                infoScript.AppendLine("\t\t\t\t\t\tResult = true;");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                    DataRow dr = dtTemp.Rows[0];");
+                infoScript.AppendLine("\t\t\t\t\t\tDataRow dr = dtTemp.Rows[0];");
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     string[] wording = generateWording(dr).Split('@');
-                    infoScript.AppendLine("\t\t\t\t\t" + wording[3]);
+                    infoScript.AppendLine("\t\t\t\t\t\t" + wording[3]);
                 }
-                infoScript.AppendLine("                }");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("            catch (Exception ex)");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                StackTrace stack = new StackTrace();");
-                infoScript.AppendLine("                StackFrame frame = stack.GetFrame(0);");
-                infoScript.AppendLine("                string className = frame.GetMethod().DeclaringType.FullName;");
-                infoScript.AppendLine("                string methodName = frame.GetMethod().Name;");
+                infoScript.AppendLine("\t\t\t\t\t}");
+                infoScript.AppendLine("\t\t\t\t}");
+                infoScript.AppendLine("\t\t\t\tcatch (Exception ex)");
+                infoScript.AppendLine("\t\t\t\t{");
+                infoScript.AppendLine("\t\t\t\t\tStackTrace stack = new StackTrace();");
+                infoScript.AppendLine("\t\t\t\t\tStackFrame frame = stack.GetFrame(0);");
+                infoScript.AppendLine("\t\t\t\t\tstring className = frame.GetMethod().DeclaringType.FullName;");
+                infoScript.AppendLine("\t\t\t\t\tstring methodName = frame.GetMethod().Name;");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            ExceptionLogInfo exceptionLog = new ExceptionLogInfo(_ConnectionString);");
-                infoScript.AppendLine("            exceptionLog.ExceptionClass = className;");
-                infoScript.AppendLine("            exceptionLog.ExceptionMethod = methodName;");
-                infoScript.AppendLine("            exceptionLog.ExceptionReason = ex.ToString();");
-                infoScript.AppendLine("            exceptionLog.ExceptionDate = DateTime.Now;");
+                infoScript.AppendLine("\t\t\t\t\tExceptionLogInfo exceptionLog = new ExceptionLogInfo(_ConnectionString);");
+                infoScript.AppendLine("\t\t\t\t\texceptionLog.ExceptionClass = className;");
+                infoScript.AppendLine("\t\t\t\t\texceptionLog.ExceptionMethod = methodName;");
+                infoScript.AppendLine("\t\t\t\t\texceptionLog.ExceptionReason = ex.ToString();");
+                infoScript.AppendLine("\t\t\t\t\texceptionLog.ExceptionDate = DateTime.Now;");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            exceptionLog.Insert();");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("            connection.Close();");
-                infoScript.AppendLine("        }");
+                infoScript.AppendLine("\t\t\t\t\texceptionLog.Insert();");
+                infoScript.AppendLine("\t\t\t\t}");
+                infoScript.AppendLine("\t\t\t\tconnection.Close();");
+                infoScript.AppendLine("\t\t\t}");
+                infoScript.AppendLine("\t\t\treturn Result;");
+                infoScript.AppendLine("\t\t}");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        return Result;");
-                infoScript.AppendLine("        }");
                 infoScript.AppendLine("");
+                infoScript.AppendLine("\t\t/// <summary>");
+                infoScript.AppendLine("\t\t/// Insert");
+                infoScript.AppendLine("\t\t/// </summary>");
+                infoScript.AppendLine("\t\tpublic void Insert()");
+                infoScript.AppendLine("\t\t{");
+                infoScript.AppendLine("\t\t\tusing (SqlCommand command = new SqlCommand())");
+                infoScript.AppendLine("\t\t\t{");
+                infoScript.AppendLine("\t\t\t\tSqlConnection connection = new SqlConnection(_ConnectionString);");
+                infoScript.AppendLine("\t\t\t\tconnection.Open();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        /// <summary>");
-                infoScript.AppendLine("        /// Insert");
-                infoScript.AppendLine("        /// </summary>");
-                infoScript.AppendLine("        public void Insert()");
-                infoScript.AppendLine("        {");
-                infoScript.AppendLine("            using (SqlCommand command = new SqlCommand())");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                SqlConnection connection = new SqlConnection(_ConnectionString);");
-                infoScript.AppendLine("                connection.Open();");
+                infoScript.AppendLine("\t\t\t\ttry");
+                infoScript.AppendLine("\t\t\t\t{");
+                infoScript.AppendLine("\t\t\t\t\tStringBuilder sbCmd = new StringBuilder();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                try");
-                infoScript.AppendLine("                {");
-                infoScript.AppendLine("                    StringBuilder sbCmd = new StringBuilder();");
-                infoScript.AppendLine("");
-                infoScript.AppendLine("            sbCmd.Append(\"	INSERT INTO [" + tableName + "]		\");");
-                infoScript.AppendLine("            sbCmd.Append(\"		(				\");");
+                infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"	INSERT INTO [" + tableName + "]		\");");
+                infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"		(				\");");
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
-                    if (ColumnsTable.Rows.IndexOf(dr) == 0)
-                        infoScript.AppendLine("            sbCmd.Append(\"		" + dr["ColumnName"].ToString() + "		\");");
+                    if (dr["isIdentity"].ToString() == "Y")
+                        continue;
+                    if (ColumnsTable.Rows.IndexOf(dr) == 0 || (ColumnsTable.Rows.IndexOf(dr) == 1 && ColumnsTable.Rows[0]["isIdentity"].ToString() == "Y"))
+                        infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"		" + dr["ColumnName"].ToString() + "		\");");
                     else
-                        infoScript.AppendLine("            sbCmd.Append(\"		," + dr["ColumnName"].ToString() + "		\");");
+                        infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"		," + dr["ColumnName"].ToString() + "		\");");
                 }
-                infoScript.AppendLine("            sbCmd.Append(\"		)				\");");
-                infoScript.AppendLine("            sbCmd.Append(\"	VALUES		\");");
-                infoScript.AppendLine("            sbCmd.Append(\"		(				\");");
+                infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"		)				\");");
+                infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"	VALUES		\");");
+                infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"		(				\");");
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
-                    if (ColumnsTable.Rows.IndexOf(dr) == 0)
-                        infoScript.AppendLine("            sbCmd.Append(\"		@" + dr["ColumnName"].ToString() + "		\");");
+                    if (dr["isIdentity"].ToString() == "Y")
+                        continue;
+                    if (ColumnsTable.Rows.IndexOf(dr) == 0 || (ColumnsTable.Rows.IndexOf(dr) == 1 && ColumnsTable.Rows[0]["isIdentity"].ToString() == "Y"))
+                        infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"		@" + dr["ColumnName"].ToString() + "		\");");
                     else
-                        infoScript.AppendLine("            sbCmd.Append(\"		,@" + dr["ColumnName"].ToString() + "		\");");
+                        infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"		,@" + dr["ColumnName"].ToString() + "		\");");
                 }
-                infoScript.AppendLine("            sbCmd.Append(\"		)				\");");
+                infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"		)				\");");
                 infoScript.AppendLine("");
+                infoScript.AppendLine("\t\t\t\t\tcommand.Connection = connection;");
+                infoScript.AppendLine("\t\t\t\t\tcommand.CommandText = sbCmd.ToString();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                command.Connection = connection;");
-                infoScript.AppendLine("                command.CommandText = sbCmd.ToString();");
+                infoScript.AppendLine("\t\t\t\t\t#region Add In Parameter");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            #region Add In Parameter");
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
+                    if (dr["isIdentity"].ToString() == "Y")
+                        continue;
                     string[] wording = generateWording(dr).Split('@');
                     if (wording[1] == "XmlDocument")
                     {
-                        infoScript.AppendLine("            command.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType.Xml).Value = this._" + dr["ColumnName"].ToString() + ".OuterXml);");
+                        infoScript.AppendLine("\t\t\t\t\tcommand.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType.Xml).Value = this._" + dr["ColumnName"].ToString() + ".OuterXml == null ? DBNull.Value : this._" + dr["ColumnName"].ToString() + ".OuterXml;");
                     }
                     else
                     {
-                        infoScript.AppendLine("            command.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType." + dr["DataType"].ToString() + ").Value = this._" + dr["ColumnName"].ToString() + ";");
+                        infoScript.AppendLine("\t\t\t\t\tcommand.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType." + SqlDbTypeToUpper[dr["DataType"].ToString()] + ").Value = this._" + dr["ColumnName"].ToString() + " == null ? DBNull.Value : this._" + dr["ColumnName"].ToString() + ";");
                     }
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            #endregion");
+                infoScript.AppendLine("\t\t\t\t\t#endregion");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                command.ExecuteNonQuery();");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("            catch (Exception ex)");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                StackTrace stack = new StackTrace();");
-                infoScript.AppendLine("                StackFrame frame = stack.GetFrame(0);");
-                infoScript.AppendLine("                string className = frame.GetMethod().DeclaringType.FullName;");
-                infoScript.AppendLine("                string methodName = frame.GetMethod().Name;");
+                infoScript.AppendLine("\t\t\t\t\tcommand.ExecuteNonQuery();");
+                infoScript.AppendLine("\t\t\t\t}");
+                infoScript.AppendLine("\t\t\t\tcatch (Exception ex)");
+                infoScript.AppendLine("\t\t\t\t{");
+                infoScript.AppendLine("\t\t\t\t\tStackTrace stack = new StackTrace();");
+                infoScript.AppendLine("\t\t\t\t\tStackFrame frame = stack.GetFrame(0);");
+                infoScript.AppendLine("\t\t\t\t\tstring className = frame.GetMethod().DeclaringType.FullName;");
+                infoScript.AppendLine("\t\t\t\t\tstring methodName = frame.GetMethod().Name;");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            ExceptionLogInfo exceptionLog = new ExceptionLogInfo(_ConnectionString);");
-                infoScript.AppendLine("            exceptionLog.ExceptionClass = className;");
-                infoScript.AppendLine("            exceptionLog.ExceptionMethod = methodName;");
-                infoScript.AppendLine("            exceptionLog.ExceptionReason = ex.ToString();");
-                infoScript.AppendLine("            exceptionLog.ExceptionDate = DateTime.Now;");
+                infoScript.AppendLine("\t\t\t\t\tExceptionLogInfo exceptionLog = new ExceptionLogInfo(_ConnectionString);");
+                infoScript.AppendLine("\t\t\t\t\texceptionLog.ExceptionClass = className;");
+                infoScript.AppendLine("\t\t\t\t\texceptionLog.ExceptionMethod = methodName;");
+                infoScript.AppendLine("\t\t\t\t\texceptionLog.ExceptionReason = ex.ToString();");
+                infoScript.AppendLine("\t\t\t\t\texceptionLog.ExceptionDate = DateTime.Now;");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            exceptionLog.Insert();");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("            connection.Close();");
-                infoScript.AppendLine("        }");
-                infoScript.AppendLine("        }");
+                infoScript.AppendLine("\t\t\t\t\texceptionLog.Insert();");
+                infoScript.AppendLine("\t\t\t\t}");
+                infoScript.AppendLine("\t\t\t\tconnection.Close();");
+                infoScript.AppendLine("\t\t\t}");
+                infoScript.AppendLine("\t\t}");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        /// <summary>");
-                infoScript.AppendLine("        /// Update");
-                infoScript.AppendLine("        /// </summary>");
-                infoScript.AppendLine("        public void Update()");
-                infoScript.AppendLine("        {");
-                infoScript.AppendLine("            using (SqlCommand command = new SqlCommand())");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                SqlConnection connection = new SqlConnection(_ConnectionString);");
-                infoScript.AppendLine("                connection.Open();");
+                infoScript.AppendLine("\t\t/// <summary>");
+                infoScript.AppendLine("\t\t/// Update");
+                infoScript.AppendLine("\t\t/// </summary>");
+                infoScript.AppendLine("\t\tpublic void Update()");
+                infoScript.AppendLine("\t\t{");
+                infoScript.AppendLine("\t\t\tusing (SqlCommand command = new SqlCommand())");
+                infoScript.AppendLine("\t\t\t{");
+                infoScript.AppendLine("\t\t\t\tSqlConnection connection = new SqlConnection(_ConnectionString);");
+                infoScript.AppendLine("\t\t\t\tconnection.Open();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                try");
-                infoScript.AppendLine("                {");
-                infoScript.AppendLine("            StringBuilder sbCmd = new StringBuilder();");
+                infoScript.AppendLine("\t\t\t\ttry");
+                infoScript.AppendLine("\t\t\t\t{");
+                infoScript.AppendLine("\t\t\t\t\tStringBuilder sbCmd = new StringBuilder();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            sbCmd.Append(\"	UPDATE [" + tableName + "] SET 		\");");
+                infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"	UPDATE [" + tableName + "] SET 		\");");
                 DataTable dt = new DataTable();
                 dt = ColumnsTable.Copy();
                 foreach (DataRow dr in dt.Rows)
@@ -1233,62 +1237,63 @@ namespace TestForm
                 dt.AcceptChanges();
                 foreach (DataRow dr in dt.Rows)
                 {
-                    string[] wording = generateWording(dr).Split('@');
                     if (dt.Rows.IndexOf(dr) == 0)
-                        infoScript.AppendLine("            sbCmd.Append(\"		" + dr["ColumnName"].ToString() + " = @" + dr["ColumnName"].ToString() + " 		\");");
+                        infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"		" + dr["ColumnName"].ToString() + " = @" + dr["ColumnName"].ToString() + " 		\");");
                     else
-                        infoScript.AppendLine("            sbCmd.Append(\"		," + dr["ColumnName"].ToString() + " = @" + dr["ColumnName"].ToString() + " 		\");");
+                        infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"		," + dr["ColumnName"].ToString() + " = @" + dr["ColumnName"].ToString() + " 		\");");
                 }
-                infoScript.AppendLine("            sbCmd.Append(\"	WHERE (1=1) \");");
+                infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"	WHERE (1=1) \");");
                 foreach (string ColumnName in pkColumns)
                 {
-                    infoScript.AppendLine("            sbCmd.Append(\"		AND " + ColumnName + " = @" + ColumnName + " 		\");");
+                    infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"		AND " + ColumnName + " = @" + ColumnName + " 		\");");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                command.Connection = connection;");
-                infoScript.AppendLine("                command.CommandText = sbCmd.ToString();");
+                infoScript.AppendLine("\t\t\t\t\tcommand.Connection = connection;");
+                infoScript.AppendLine("\t\t\t\t\tcommand.CommandText = sbCmd.ToString();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            #region Add In Parameter");
+                infoScript.AppendLine("\t\t\t\t\t#region Add In Parameter");
+                infoScript.AppendLine("");
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
                     string[] wording = generateWording(dr).Split('@');
                     if (wording[1] == "XmlDocument")
                     {
-                        infoScript.AppendLine("            command.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType.Xml).Value = this._" + dr["ColumnName"].ToString() + ".OuterXml;");
+                        infoScript.AppendLine("\t\t\t\t\tcommand.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType.Xml).Value = this._" + dr["ColumnName"].ToString() + ".OuterXml;");
                     }
                     else
                     {
-                        infoScript.AppendLine("            command.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType." + dr["DataType"].ToString() + ").Value = this._" + dr["ColumnName"].ToString() + ";");
+                        infoScript.AppendLine("\t\t\t\t\tcommand.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType." + SqlDbTypeToUpper[dr["DataType"].ToString()] + ").Value = this._" + dr["ColumnName"].ToString() + ";");
                     }
                 }
-                infoScript.AppendLine("            #endregion");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                command.ExecuteNonQuery();");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("            catch (Exception ex)");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                StackTrace stack = new StackTrace();");
-                infoScript.AppendLine("                StackFrame frame = stack.GetFrame(0);");
-                infoScript.AppendLine("                string className = frame.GetMethod().DeclaringType.FullName;");
-                infoScript.AppendLine("                string methodName = frame.GetMethod().Name;");
+                infoScript.AppendLine("\t\t\t\t\t#endregion");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            ExceptionLogInfo exceptionLog = new ExceptionLogInfo(_ConnectionString);");
-                infoScript.AppendLine("            exceptionLog.ExceptionClass = className;");
-                infoScript.AppendLine("            exceptionLog.ExceptionMethod = methodName;");
-                infoScript.AppendLine("            exceptionLog.ExceptionReason = ex.ToString();");
-                infoScript.AppendLine("            exceptionLog.ExceptionDate = DateTime.Now;");
+                infoScript.AppendLine("\t\t\t\t\tcommand.ExecuteNonQuery();");
+                infoScript.AppendLine("\t\t\t\t}");
+                infoScript.AppendLine("\t\t\t\tcatch (Exception ex)");
+                infoScript.AppendLine("\t\t\t\t{");
+                infoScript.AppendLine("\t\t\t\t\tStackTrace stack = new StackTrace();");
+                infoScript.AppendLine("\t\t\t\t\tStackFrame frame = stack.GetFrame(0);");
+                infoScript.AppendLine("\t\t\t\t\tstring className = frame.GetMethod().DeclaringType.FullName;");
+                infoScript.AppendLine("\t\t\t\t\tstring methodName = frame.GetMethod().Name;");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            exceptionLog.Insert();");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("            connection.Close();");
-                infoScript.AppendLine("        }");
-                infoScript.AppendLine("        }");
+                infoScript.AppendLine("\t\t\t\t\tExceptionLogInfo exceptionLog = new ExceptionLogInfo(_ConnectionString);");
+                infoScript.AppendLine("\t\t\t\t\texceptionLog.ExceptionClass = className;");
+                infoScript.AppendLine("\t\t\t\t\texceptionLog.ExceptionMethod = methodName;");
+                infoScript.AppendLine("\t\t\t\t\texceptionLog.ExceptionReason = ex.ToString();");
+                infoScript.AppendLine("\t\t\t\t\texceptionLog.ExceptionDate = DateTime.Now;");
+                infoScript.AppendLine("");
+                infoScript.AppendLine("\t\t\t\t\texceptionLog.Insert();");
+                infoScript.AppendLine("\t\t\t\t}");
+                infoScript.AppendLine("\t\t\t\tconnection.Close();");
+                infoScript.AppendLine("\t\t\t}");
+                infoScript.AppendLine("\t\t}");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        /// <summary>");
-                infoScript.AppendLine("        /// Delete");
-                infoScript.AppendLine("        /// </summary>");
-                infoScript.Append("        public void Delete(");
+                infoScript.AppendLine("\t\t/// <summary>");
+                infoScript.AppendLine("\t\t/// Delete");
+                infoScript.AppendLine("\t\t/// </summary>");
+                infoScript.Append("\t\tpublic void Delete(");
 
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
@@ -1307,67 +1312,66 @@ namespace TestForm
                 }
 
                 infoScript.AppendLine(")");
-                infoScript.AppendLine("        {");
+                infoScript.AppendLine("\t\t{");
 
                 foreach (string pkColumn in pkColumns)
                 {
-                    infoScript.AppendLine("            this._" + pkColumn + " = i" + pkColumn + ";");
+                    infoScript.AppendLine("\t\t\tthis._" + pkColumn + " = i" + pkColumn + ";");
                 }
 
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            using (SqlCommand command = new SqlCommand())");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                SqlConnection connection = new SqlConnection(_ConnectionString);");
-                infoScript.AppendLine("                connection.Open();");
+                infoScript.AppendLine("\t\t\tusing (SqlCommand command = new SqlCommand())");
+                infoScript.AppendLine("\t\t\t{");
+                infoScript.AppendLine("\t\t\t\tSqlConnection connection = new SqlConnection(_ConnectionString);");
+                infoScript.AppendLine("\t\t\t\tconnection.Open();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                try");
-                infoScript.AppendLine("                {");
-                infoScript.AppendLine("                    StringBuilder sbCmd = new StringBuilder();");
+                infoScript.AppendLine("\t\t\t\ttry");
+                infoScript.AppendLine("\t\t\t\t{");
+                infoScript.AppendLine("\t\t\t\t\tStringBuilder sbCmd = new StringBuilder();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            sbCmd.Append(\"	DELETE [" + tableName + "]		\");");
-                infoScript.AppendLine("            sbCmd.Append(\"	WHERE (1=1) 		\");");
+                infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"	DELETE [" + tableName + "]		\");");
+                infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"	WHERE (1=1) 		\");");
                 foreach (string ColumnName in pkColumns)
                 {
-                    infoScript.AppendLine("            sbCmd.Append(\"		AND " + ColumnName + " = @" + ColumnName + " 		\");");
+                    infoScript.AppendLine("\t\t\t\t\tsbCmd.Append(\"		AND " + ColumnName + " = @" + ColumnName + " 		\");");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                command.Connection = connection;");
-                infoScript.AppendLine("                command.CommandText = sbCmd.ToString();");
+                infoScript.AppendLine("\t\t\t\t\tcommand.Connection = connection;");
+                infoScript.AppendLine("\t\t\t\t\tcommand.CommandText = sbCmd.ToString();");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            #region Add In Parameter");
+                infoScript.AppendLine("\t\t\t\t\t#region Add In Parameter");
                 infoScript.AppendLine("");
                 foreach (DataRow dr in ColumnsTable.Rows)
                 {
-                    string[] wording = generateWording(dr).Split('@');
                     if (dr["isPK"].ToString() == "Y")
-                        infoScript.AppendLine("            command.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType." + dr["DataType"].ToString() + ").Value = this._" + dr["ColumnName"].ToString() + ";");
+                        infoScript.AppendLine("\t\t\t\t\tcommand.Parameters.Add(\"@" + dr["ColumnName"].ToString() + "\", SqlDbType." + SqlDbTypeToUpper[dr["DataType"].ToString()] + ").Value = this._" + dr["ColumnName"].ToString() + ";");
                 }
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            #endregion");
+                infoScript.AppendLine("\t\t\t\t\t#endregion");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("                command.ExecuteNonQuery();");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("            catch (Exception ex)");
-                infoScript.AppendLine("            {");
-                infoScript.AppendLine("                StackTrace stack = new StackTrace();");
-                infoScript.AppendLine("                StackFrame frame = stack.GetFrame(0);");
-                infoScript.AppendLine("                string className = frame.GetMethod().DeclaringType.FullName;");
-                infoScript.AppendLine("                string methodName = frame.GetMethod().Name;");
+                infoScript.AppendLine("\t\t\t\t\tcommand.ExecuteNonQuery();");
+                infoScript.AppendLine("\t\t\t}");
+                infoScript.AppendLine("\t\t\tcatch (Exception ex)");
+                infoScript.AppendLine("\t\t\t{");
+                infoScript.AppendLine("\t\t\t\tStackTrace stack = new StackTrace();");
+                infoScript.AppendLine("\t\t\t\tStackFrame frame = stack.GetFrame(0);");
+                infoScript.AppendLine("\t\t\t\tstring className = frame.GetMethod().DeclaringType.FullName;");
+                infoScript.AppendLine("\t\t\t\tstring methodName = frame.GetMethod().Name;");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            ExceptionLogInfo exceptionLog = new ExceptionLogInfo(_ConnectionString);");
-                infoScript.AppendLine("            exceptionLog.ExceptionClass = className;");
-                infoScript.AppendLine("            exceptionLog.ExceptionMethod = methodName;");
-                infoScript.AppendLine("            exceptionLog.ExceptionReason = ex.ToString();");
-                infoScript.AppendLine("            exceptionLog.ExceptionDate = DateTime.Now;");
+                infoScript.AppendLine("\t\t\t\tExceptionLogInfo exceptionLog = new ExceptionLogInfo(_ConnectionString);");
+                infoScript.AppendLine("\t\t\t\texceptionLog.ExceptionClass = className;");
+                infoScript.AppendLine("\t\t\t\texceptionLog.ExceptionMethod = methodName;");
+                infoScript.AppendLine("\t\t\t\texceptionLog.ExceptionReason = ex.ToString();");
+                infoScript.AppendLine("\t\t\t\texceptionLog.ExceptionDate = DateTime.Now;");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("            exceptionLog.Insert();");
-                infoScript.AppendLine("            }");
-                infoScript.AppendLine("            connection.Close();");
-                infoScript.AppendLine("        }");
-                infoScript.AppendLine("        }");
+                infoScript.AppendLine("\t\t\t\texceptionLog.Insert();");
+                infoScript.AppendLine("\t\t\t\t}");
+                infoScript.AppendLine("\t\t\t\tconnection.Close();");
+                infoScript.AppendLine("\t\t\t}");
+                infoScript.AppendLine("\t\t}");
                 infoScript.AppendLine("");
-                infoScript.AppendLine("        #endregion");
-                infoScript.AppendLine("    }");
+                infoScript.AppendLine("\t\t#endregion");
+                infoScript.AppendLine("\t}");
                 infoScript.AppendLine("}");
                 infoScript.AppendLine("");
                 infoScript.AppendLine("");
@@ -1475,9 +1479,9 @@ namespace TestForm
                     convertObject = "this._" + dr["ColumnName"].ToString() + " = Convert.ToString(dr[\"" + dr["ColumnName"].ToString() + "\"]);";
                     break;
                 case "Byte[]":
-                    initialVariables = "";
+                    initialVariables = " = null";
                     declareType = "byte[]";
-                    convertObject = "this._" + dr["ColumnName"].ToString() + " = (byte[])dr[\"" + dr["ColumnName"].ToString() + "\"]);";
+                    convertObject = "this._" + dr["ColumnName"].ToString() + " = (byte[])dr[\"" + dr["ColumnName"].ToString() + "\"];";
                     break;
                 case "Decimal":
                     initialVariables = " = 0";
