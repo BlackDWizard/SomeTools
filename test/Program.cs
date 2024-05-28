@@ -633,7 +633,10 @@ namespace test
             //    }
             //}
 
-            TEST3();
+            //TEST3();
+            Triangle1 triangle1 = new Triangle1(); 
+            Display1 display1 = new Display1(triangle1);
+            display1.ShowTheSharp();
         }
         public static void TEST3()
         {
@@ -1175,6 +1178,38 @@ namespace test
         {
             Regex NumberPattern = new Regex("[^0-9.]");
             return !NumberPattern.IsMatch(s);
+        }
+    }
+
+    public interface IShape //介面
+    {
+        void Show();
+    }
+    public class Triangle1 : IShape //實作介面
+    {
+        public void Show()
+        {
+            Console.WriteLine($"這是一個 Triangle ");
+        }
+    }
+    public class Square1 : IShape //實作介面
+    {
+        public void Show()
+        {
+            Console.WriteLine($"這是一個 Square");
+        }
+    }
+
+    public class Display1
+    {
+        public IShape _sharp;
+        public Display1(IShape sharp)
+        {
+            _sharp = sharp;
+        }
+        public void ShowTheSharp()
+        {
+            this._sharp.Show();
         }
     }
 
