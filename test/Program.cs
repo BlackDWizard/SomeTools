@@ -27,12 +27,13 @@ using NPOI.SS.Util;
 //using iTextSharp.text.html.simpleparser;
 //using iTextSharp.text.pdf;
 using System.Linq;
+using System.Drawing;
 
 namespace test
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             //string cc = "{\"tx_id\":\"85343268-2d9e-4163-9c92-63fad5f3d104\",\"data\":\"{\\\"pid\\\":\\\"A127195465\\\",\\\"holder\\\":\\\"\\\",\\\"birthday\\\":\\\"\\\",\\\"email\\\":\\\"\\\",\\\"mobile\\\":\\\"0911111111\\\",\\\"salt\\\":\\\"75a740b1-91d1-4736-8491-ab719f0b4abd\\\",\\\"as_optional\\\":\\\"\\\"}\",\"pkcs7\":\"[\\\"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\\\"]\",\"verification_type\":\"FCS\",\"as_id\":\"twid\"}";
             //string bb = "{\"data\":{\"id\":\"3a087410-b9fc-510b-f10f-a2bf73a98e33\",\"status\":\"Pending\",\"code\":\"IDP101\",\"source\":\"System\",\"verification\":{\"documentType\":\"IDCARD\",\"documentCountry\":\"TWN\",\"details\":{\"idNumber\":\"L122328052\",\"dateOfBirth\":\"1977-09-12\",\"dateOfIssue\":\"2012-08-03\",\"gender\":\"male\",\"givenName\":\"佳閔\",\"issueCity\":\"新北市\",\"issueReason\":\"換發\",\"name\":\"蔡佳閔\",\"surname\":\"蔡\",\"address\":\"新北市泰山區山腳里11鄰泰林路二段470號十三樓\",\"father\":\"蔡基礎\",\"militaryService\":\"常兵備役\",\"mother\":\"蔡陳朱鑾\",\"placeOfBirth\":\"臺灣省臺中縣\",\"serialNumber\":\"0033546310\",\"spouse\":\"曾宜婷\"}}},\"type\":\"IdentityVerification.Identification\",\"customerId\":\"web_client_1672381650427\",\"timestamp\":1672384647617,\"event\":\"TW_CCPL_default\"}";
@@ -619,20 +620,6 @@ namespace test
             //Console.WriteLine(b);
             #endregion
 
-            //int _Out = 0;
-            //if (!Int32.TryParse("0", out _Out))
-            //{
-            //    Console.WriteLine(_Out);
-            //    if ("0" == "")
-            //    {
-            //        //_WS_CM_ADDRESS_NO_C01 = "0";
-            //    }
-            //    else
-            //    {
-            //        throw new System.Exception("WS_CM_ADDRESS_NO_C01  Must be Number.");
-            //    }
-            //}
-
             //TEST3();
             Triangle1 triangle1 = new Triangle1(); 
             Display1 display1 = new Display1(triangle1);
@@ -674,6 +661,109 @@ namespace test
             }
         }
 
+        public static byte[] ReadFile(string filePath)
+        {
+            byte[] buffer;
+            FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            try
+            {
+                buffer = System.IO.File.ReadAllBytes(filePath);
+            }
+            finally
+            {
+                fileStream.Close();
+            }
+            return buffer;
+        }
+
+        // Varbinary => Image
+        public static Image ConvertToImage(byte[] linqBinary)
+        {
+            Image image = null;
+
+            using (MemoryStream ms = new MemoryStream(linqBinary))
+            {
+                image = Image.FromStream(ms);
+            }
+            return image;
+        }
+
+
+        public static void InsertImage()
+        {
+
+            string sqlConnection =
+                "Data Source=localhost;" +
+                "Initial Catalog=ShoppingWeb;" +
+                "User id=sa;" +
+                "Password=11111;"; ;
+            SqlConnection connection = new SqlConnection(sqlConnection);
+            using (SqlCommand command = new SqlCommand())
+            {
+                connection.Open();
+                command.Connection = connection;
+                command.CommandText = "insert into ProductImage (ProductSN,ProductImage,Creator,CreatedDate) values ('0000000001',@Content,'9999999',GetDate())";
+
+                SqlParameter param = command.Parameters.Add("@Content", SqlDbType.VarBinary);
+                param.Value = ReadFile("D:\\SideProject\\Frontend\\shoppingWeb\\public\\images\\p1.png");
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                connection.Close();
+            }
+        }
+
+
+        public static void LoadAndSaveImage(string ProductSN)
+        {
+
+            string filePath = "ConnectionConfig.json"; // 將路徑替換為你的JSON文件的實際路徑
+
+            // 讀取JSON文件內容
+            string jsonContent = File.ReadAllText(filePath);
+
+            // 將JSON字串解析為JObject
+            JObject jsonObject = JObject.Parse(jsonContent);
+
+            // 讀取"isNotify"的值
+            string sqlConnection = jsonObject["ConnectionString"].ToString();
+
+            SqlConnection connection = new SqlConnection(sqlConnection);
+            using (SqlCommand command = new SqlCommand())
+            {
+                connection.Open();
+                command.Connection = connection;
+                command.CommandText = "select * from ProductImage where ProductSN = @ProductSN";
+
+                SqlParameter param = command.Parameters.Add("@ProductSN", SqlDbType.Char);
+                param.Value = ProductSN;
+                try
+                {
+                    IDataReader dataReader = command.ExecuteReader();
+                    DataTable dt = new DataTable();
+                    dt.Load(dataReader);
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        Image image;
+                        image = ConvertToImage((byte[])dt.Rows[0]["ProductImage"]);
+                        if (File.Exists("D:\\SideProject\\Frontend\\shoppingWeb\\public\\images\\p1_fromDB.png"))
+                            File.Delete("D:\\SideProject\\Frontend\\shoppingWeb\\public\\images\\p1_fromDB.png");
+                        image.Save("D:\\SideProject\\Frontend\\shoppingWeb\\public\\images\\p1_fromDB.png");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                connection.Close();
+            }
+        }
 
         public static void SetConnection(string SystemID, string ConnList)
         {
